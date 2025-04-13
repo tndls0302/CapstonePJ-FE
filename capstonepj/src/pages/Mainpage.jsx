@@ -1,7 +1,10 @@
 import React from "react";
 import MainMap from "../components/MainMap";
+import { useNavigate } from "react-router-dom";
 
 function Mainpage() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex h-screen w-screen">
       {/* 사이드바 */}
@@ -10,13 +13,19 @@ function Mainpage() {
           <button className="text-2xl hover:scale-110 transition-transform">
             ✈️
           </button>
-          <button className="text-2xl hover:scale-110 transition-transform">
+          <button
+            className="text-2xl hover:scale-110 transition-transform"
+            onClick={() => navigate("/mypage")}
+          >
             ⭐
           </button>
           <button className="text-2xl hover:scale-110 transition-transform">
             ❤️
           </button>
-          <button className="text-2xl hover:scale-110 transition-transform">
+          <button
+            className="text-2xl hover:scale-110 transition-transform"
+            onClick={() => navigate("/mypage")}
+          >
             🍀
           </button>
         </div>
