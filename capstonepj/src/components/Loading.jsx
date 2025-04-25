@@ -1,3 +1,4 @@
+// 로딩 렌더링
 export default function Loading() {
   return (
     <div className="flex justify-center items-center mt-4">
