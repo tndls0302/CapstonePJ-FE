@@ -9,6 +9,8 @@ export default {
       colors: {
         vintagePink: "#C28CA9",
         palePink: "#D8B5C7",
+        softPink: "#E695BD",
+        highlightPink: "#FC5BAB",
         roseBeige: "#EFDADA",
       },
     },

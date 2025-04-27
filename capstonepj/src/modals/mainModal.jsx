@@ -1,14 +1,25 @@
-import React from "react";
-import { X } from "lucide-react"; // 닫기 아이콘 (lucide-react 설치 필요)
+import React, { useState } from "react";
+import { X } from "lucide-react";
+import { foodTravel } from "../components/FoodData";
 
 function MainModal({ isOpen, onClose }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // 검색 필터링
+  const filteredFoodTickets = foodTravel.filter(
+    (ticket) =>
+      ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.items.some((item) =>
+        item.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+  );
+
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-[420px] z-50 transition-transform duration-300 ${
+      className={`fixed top-0 right-0 h-full w-[500px] z-50 transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      {/* 배경 */}
       <div className="absolute inset-0 bg-white/90 backdrop-blur-xl shadow-2xl rounded-l-3xl overflow-hidden">
         {/* 닫기 버튼 */}
         <div className="flex justify-end p-4">
@@ -20,28 +31,55 @@ function MainModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* 내용 */}
-        <div className="px-6 pb-6 overflow-y-auto h-[90%]">
-          <h2 className="text-2xl font-semibold text-zinc-800 mb-6">
-            🍽️ 주변 맛집 추천
+        {/* 제목 */}
+        <div className="px-8 py-1">
+          <h2 className="text-2xl font-semibold text-yellow-800">
+            ✈️ 내 주변 맛집
           </h2>
+        </div>
 
-          {/* 맛집 리스트 예시 */}
-          <ul className="space-y-4">
-            {[1, 2, 3, 4, 5].map((num) => (
-              <li
-                key={num}
-                className="bg-pink-100 rounded-xl p-4 shadow hover:bg-pink-200 transition-all"
-              >
-                <h3 className="font-bold text-lg text-pink-700">
-                  맛집 {num}호
-                </h3>
-                <p className="text-sm text-zinc-600 mt-1">
-                  이 맛집은 정말 맛있어요! 가까운 곳에 있어요 🍜
+        {/* 상단 검색창 */}
+        <div className="px-6 py-4">
+          <input
+            type="text"
+            placeholder="검색"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 rounded-md border border-gray-300  focus:border-vintagePink focus:ring-vintagePink focus:ring-1 focus:outline-none"
+          />
+        </div>
+
+        {/* 내용 */}
+        <div className="px-6 pb-6 overflow-y-scroll h-[90%] space-y-6">
+          {filteredFoodTickets.map((ticket, index) => (
+            <div
+              key={index}
+              className="bg-yellow-100 border-2 border-dashed border-yellow-400 rounded-2xl p-6 shadow-md text-center"
+            >
+              <h3 className="text-xl font-bold text-yellow-800 mb-2">
+                {ticket.title}
+              </h3>
+
+              {/* 음식점 이미지 */}
+              <img
+                src={ticket.image}
+                alt={ticket.title}
+                className="w-full h-32 object-cover rounded-xl mb-4"
+              />
+
+              <ul className="mt-4 space-y-1 text-left text-yellow-800 text-sm">
+                {ticket.items.map((item, idx) => (
+                  <li key={idx}>• {item}</li>
+                ))}
+              </ul>
+
+              <div className="mt-4 border-t border-dashed border-yellow-400 pt-3">
+                <p className="font-mono text-xs tracking-widest">
+                  TICKET-{index + 1}-FOOD
                 </p>
-              </li>
-            ))}
-          </ul>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

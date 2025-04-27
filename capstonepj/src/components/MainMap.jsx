@@ -81,9 +81,16 @@ function MainMap() {
         level={5}
       >
         {/* 현재 위치 마커 */}
-        <MapMarker position={userLocation}>
-          <div className="text-sm font-semibold">현재 위치</div>
-        </MapMarker>
+        <MapMarker
+          position={userLocation}
+          title=""
+          clickable={false}
+        ></MapMarker>
+        <CustomOverlayMap position={userLocation} yAnchor={1.2}>
+          <div className="bg-vintagePink border-2 border-vintagePink text-white font-semibold px-4 py-2 rounded-md shadow text-xs whitespace-nowrap">
+            현재 위치
+          </div>
+        </CustomOverlayMap>
 
         {/* 음식점 마커 */}
         {restaurants.map((r) => (
