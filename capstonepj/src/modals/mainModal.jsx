@@ -33,30 +33,30 @@ function MainModal({ isOpen, onClose }) {
 
         {/* 제목 */}
         <div className="px-8 py-1">
-          <h2 className="text-2xl font-semibold text-yellow-800">
+          <h2 className="text-2xl font-semibold text-deepBlue">
             ✈️ 내 주변 맛집
           </h2>
         </div>
 
         {/* 상단 검색창 */}
-        <div className="px-6 py-4">
+        <div className="px-7 py-5">
           <input
             type="text"
             placeholder="검색"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 rounded-md border border-gray-300  focus:border-vintagePink focus:ring-vintagePink focus:ring-1 focus:outline-none"
+            className="w-[27rem] p-2 rounded-md border border-gray-300 focus:border-vintagePink focus:ring-vintagePink focus:ring-1 focus:outline-none"
           />
         </div>
 
         {/* 내용 */}
-        <div className="px-6 pb-6 overflow-y-scroll h-[90%] space-y-6">
+        <div className="px-8 pb-7 overflow-y-scroll h-[90%] space-y-6">
           {filteredFoodTickets.map((ticket, index) => (
             <div
               key={index}
-              className="bg-yellow-100 border-2 border-dashed border-yellow-400 rounded-2xl p-6 shadow-md text-center"
+              className="bg-blue-100 border-2 border-dashed border-blue-400 rounded-2xl p-6 shadow-md text-center"
             >
-              <h3 className="text-xl font-bold text-yellow-800 mb-2">
+              <h3 className="text-xl font-bold text-blue-800 mb-2">
                 {ticket.title}
               </h3>
 
@@ -67,13 +67,13 @@ function MainModal({ isOpen, onClose }) {
                 className="w-full h-32 object-cover rounded-xl mb-4"
               />
 
-              <ul className="mt-4 space-y-1 text-left text-yellow-800 text-sm">
+              <ul className="mt-4 space-y-1 text-left text-black text-sm">
                 {ticket.items.map((item, idx) => (
                   <li key={idx}>• {item}</li>
                 ))}
               </ul>
 
-              <div className="mt-4 border-t border-dashed border-yellow-400 pt-3">
+              <div className="mt-4 border-t border-dashed border-vintagePink pt-3">
                 <p className="font-mono text-xs tracking-widest">
                   TICKET-{index + 1}-FOOD
                 </p>

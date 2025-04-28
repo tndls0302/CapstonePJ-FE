@@ -12,6 +12,7 @@ export default {
         softPink: "#E695BD",
         highlightPink: "#FC5BAB",
         roseBeige: "#EFDADA",
+        deepBlue: "#1D63AF",
       },
     },
   },

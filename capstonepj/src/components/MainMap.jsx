@@ -87,7 +87,7 @@ function MainMap() {
           clickable={false}
         ></MapMarker>
         <CustomOverlayMap position={userLocation} yAnchor={1.2}>
-          <div className="bg-vintagePink border-2 border-vintagePink text-white font-semibold px-4 py-2 rounded-md shadow text-xs whitespace-nowrap">
+          <div className="bg-deepBlue border-2 border-deepBlue text-white font-semibold px-4 py-2 rounded-md shadow text-xs whitespace-nowrap">
             현재 위치
           </div>
         </CustomOverlayMap>
@@ -100,7 +100,7 @@ function MainMap() {
               position={{ lat: r.lat, lng: r.lng }}
               yAnchor={1.2}
             >
-              <div className="bg-white border-2 border-vintagePink text-black font-semibold px-4 py-2 rounded-md shadow text-xs whitespace-nowrap">
+              <div className="bg-white border-2 border-deepBlue text-black font-semibold px-4 py-2 rounded-md shadow text-xs whitespace-nowrap">
                 {r.name}
                 <br />₩ {r.price.toLocaleString()}원
               </div>
