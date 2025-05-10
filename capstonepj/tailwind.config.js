@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        script: ['"Great Vibes"', "cursive"],
+        script: ['"Great Vibes"', "cursive", '"Gloock"'],
       },
       colors: {
         vintagePink: "#C28CA9",

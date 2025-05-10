@@ -1,145 +1,134 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MainModal from "../modals/mainModal";
 import BookmarkModal from "../modals/bookmarkModal";
 import Sidebar from "../components/sidebar";
-import { restaurantData } from "../components/FoodData";
-import { topRestaurants } from "../components/FoodData";
-import { regions } from "../components/FoodData";
-import foodImage1 from "../assets/food1.jpg";
-import foodImage2 from "../assets/food2.jpg";
 
-function TopPick() {
-  const [isMainModalOpen, setIsMainModalOpen] = useState(false);
-  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
-  const [selectedRegion, setSelectedRegion] = useState("서울");
-
+function MyPage() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [currentModal, setCurrentModal] = useState(null);
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const modalType = queryParams.get("modal");
-    if (modalType === "main") {
-      setIsMainModalOpen(true);
-    } else if (modalType === "bookmark") {
-      setIsBookmarkModalOpen(true);
+  const openModal = (modalType) => {
+    if (currentModal === modalType) {
+      closeModal();
+    } else {
+      setCurrentModal(modalType);
+      navigate(`/?modal=${modalType}`, { replace: true });
     }
-  }, [location]);
-
-  const closeMainModal = () => {
-    setIsMainModalOpen(false);
-    navigate("/toppick");
   };
 
-  const closeBookmarkModal = () => {
-    setIsBookmarkModalOpen(false);
-    navigate("/toppick");
+  const closeModal = () => {
+    setCurrentModal(null);
+    navigate("/", { replace: true });
   };
 
-  const handleRegionClick = (region) => {
-    setSelectedRegion(region);
-  };
-
-  const restaurants = restaurantData[selectedRegion] || [];
+  const recommendedPlaces = [
+    {
+      id: 1,
+      name: "홍대 맛나분식",
+      description: "매콤한 떡볶이와 고소한 튀김이 환상의 조합!",
+      image: "/assets/food1.jpg",
+      rating: 4.8,
+    },
+    {
+      id: 2,
+      name: "이태원 소고기집",
+      description: "육즙 가득한 한우를 맛보고 싶다면 여기!",
+      image: "/assets/food2.jpg",
+      rating: 4.6,
+    },
+    {
+      id: 3,
+      name: "성수 브런치카페",
+      description: "분위기 좋은 공간에서 즐기는 감성 브런치 🌿",
+      image: "/assets/food3.jpg",
+      rating: 4.9,
+    },
+  ];
 
   return (
-    <div className="flex">
-      {/* 사이드바 */}
-      <Sidebar />
+    <div className="flex h-screen bg-sky-200 justify-center overflow-hidden">
+      <Sidebar openModal={openModal} />
+      <main className="flex-1 flex justify-center p-10 overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-xl p-8 flex w-full max-w-screen-xl relative border-[10px] border-gray-300 overflow-hidden">
+          <div className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col space-y-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="w-5 h-5 bg-gray-400 rounded-full"></div>
+            ))}
+          </div>
 
-      <div className="flex-1 p-8 min-h-screen bg-[#EFDADA] flex flex-col items-center">
-        {/* 메인 타이틀 */}
-        <h1 className="text-3xl font-extrabold mb-8 text-[#C28CA9] text-center">
-          만원 이하 Top 맛집
-        </h1>
-
-        {/* 메인 Top 맛집 슬라이더 (대표 이미지) */}
-        <div className="w-full max-w-4xl overflow-hidden rounded-2xl shadow-xl bg-white mb-12">
-          <div className="flex items-center">
-            <div className="w-1/2 h-64 overflow-hidden relative rounded-l-2xl">
+          {/* 오늘의 추천 맛집 (왼쪽) */}
+          <div className="w-1/3 text-center relative left-5">
+            <div className="bg-gray-50 p-7 rounded-lg shadow-md border border-gray-300">
               <img
-                src={foodImage2} // {topRestaurants[0].image}
-                alt={topRestaurants[0].name}
-                className="w-full h-full object-cover"
+                src={recommendedPlaces[0].image}
+                alt="추천 맛집"
+                className="w-40 h-40 rounded-xl mx-auto object-cover border-4 border-gray-300 shadow-md"
               />
+              <h2 className="mt-4 text-lg font-semibold bg-highlightPink text-white px-4 py-2 inline-block rounded-md">
+                오늘의 추천 🍽️
+              </h2>
+              <p className="mt-3 text-base font-medium text-gray-700">
+                {recommendedPlaces[0].name}
+              </p>
+              <p className="mt-2 text-sm text-gray-600 italic">
+                "{recommendedPlaces[0].description}"
+              </p>
+              <div className="mt-3 text-yellow-500 text-lg">
+                ⭐ {recommendedPlaces[0].rating}
+              </div>
             </div>
-            {/* 가게 이름 및 설명 */}
-            <div className="w-1/2 p-4">
-              <div className="text-xl font-bold text-[#C28CA9]">
-                {topRestaurants[0].name}
-              </div>
-              <div className="mt-2 text-sm text-gray-600">
-                {topRestaurants[0].description} {/* 가게 설명 추가 */}
-              </div>
+
+            <button
+              onClick={() => openModal("bookmark")}
+              className="mt-4 mx-auto px-8 py-4 bg-vintagePink text-white rounded-full shadow-lg transform scale-90 hover:scale-95 transition-all duration-200"
+            >
+              찜한 맛집 보기
+            </button>
+          </div>
+
+          {/* 맛집 추천 리스트 (오른쪽) */}
+          <div className="w-2/3 pl-16">
+            <h2 className="text-xl font-semibold mb-5 pb-4 border-b border-dashed border-gray-400 my-4">
+              🗂️ 추천 맛집 리스트
+            </h2>
+            <div className="space-y-5 bg-gray-50 p-4 rounded-lg border border-gray-300 shadow-md max-h-[500px] overflow-y-auto">
+              {recommendedPlaces.map((place) => (
+                <div
+                  key={place.id}
+                  className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-4"
+                >
+                  <img
+                    src={place.image}
+                    alt={place.name}
+                    className="w-24 h-24 rounded-lg object-cover border border-gray-300"
+                  />
+                  <div className="flex flex-col justify-between h-full">
+                    <h3 className="text-lg font-bold text-gray-800">
+                      {place.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 italic">
+                      {place.description}
+                    </p>
+                    <span className="text-yellow-500 font-semibold mt-1">
+                      ⭐ {place.rating}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
+      </main>
 
-        {/* 지역 선택 버튼 */}
-        <h2 className="text-2xl font-bold mt-16 mb-6 text-[#C28CA9] text-center">
-          지역별 맛집 추천
-        </h2>
-        <div className="flex justify-center gap-4 mb-12 flex-wrap">
-          {regions.map((region) => (
-            <button
-              key={region}
-              className={`px-5 py-2 rounded-full border-2 text-sm font-semibold transition-all duration-300 ${
-                region === selectedRegion ? "bg-[#D8B5C7]" : "bg-white"
-              } text-[#C28CA9] border-[#C28CA9]`}
-              onClick={() => handleRegionClick(region)}
-            >
-              {region}
-            </button>
-          ))}
-        </div>
-
-        {/* 맛집 카드 */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-          {restaurants.length > 0 ? (
-            restaurants.map((restaurant) => (
-              <div
-                key={restaurant.id}
-                className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition"
-              >
-                <img
-                  src={foodImage1} //{restaurant.image}
-                  alt={restaurant.menu}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-bold mb-1">{restaurant.name}</h3>
-                  <div className="flex items-center text-yellow-500 text-sm mb-2">
-                    ⭐ {restaurant.rating}
-                  </div>
-                  <p className="text-gray-700 font-medium">
-                    {restaurant.menu}{" "}
-                    <span className="text-orange-600">{restaurant.price}</span>
-                  </p>
-                  <p className="text-gray-400 text-sm">{restaurant.address}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-500">등록된 맛집이 없습니다.</p>
-          )}
-        </section>
-
-        {/* Main Modal */}
-        {isMainModalOpen && (
-          <MainModal isOpen={isMainModalOpen} onClose={closeMainModal} />
-        )}
-
-        {/* Bookmark Modal */}
-        {isBookmarkModalOpen && (
-          <BookmarkModal
-            isOpen={isBookmarkModalOpen}
-            onClose={closeBookmarkModal}
-          />
-        )}
-      </div>
+      {currentModal === "main" && (
+        <MainModal isOpen={true} onClose={closeModal} />
+      )}
+      {currentModal === "bookmark" && (
+        <BookmarkModal isOpen={true} onClose={closeModal} />
+      )}
     </div>
   );
 }
 
-export default TopPick;
+export default MyPage;
