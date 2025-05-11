@@ -32,12 +32,20 @@ export const foodTravel = [
   {
     title: "멘야고코로",
     image: food1,
+    rating: 4.8,
+    address: "서울 양천구",
+    menu: "소유라멘",
+    price: "₩8,500",
     items: ["소유라멘 - 8,500원", "미소라멘 - 7,900원"],
   },
   {
     title: "김밥천국",
     image: food1,
-    items: ["참치김밥 정식 - 5,500원", "라볶이 - 4,500원"],
+    rating: 4.2,
+    address: "서울 마포구",
+    menu: "돈가스 김밥",
+    price: "₩5,000",
+    items: ["참치김밥 - 4,500원", "라볶이 - 7,000원"],
   },
   {
     title: "또래오래",

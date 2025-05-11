@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Star, MapPin, Utensils } from "lucide-react";
+import { X, Star, MapPin, Utensils, Coins } from "lucide-react";
 import { foodTravel } from "../components/FoodData";
 
 function MainModal({ isOpen, onClose }) {
@@ -32,7 +32,10 @@ function MainModal({ isOpen, onClose }) {
         </div>
 
         {/* 제목 */}
-        <h2 className="text-lg font-bold text-vintagePink mb-3">추천 맛집</h2>
+        <h2 className="text-lg font-bold text-vintagePink mb-3 flex items-center gap-2">
+          <Coins className="w-5 h-5 text-vintagePink" />
+          근처 만원 미만 맛집
+        </h2>
 
         {/* 검색창 */}
         <input

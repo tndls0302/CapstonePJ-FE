@@ -91,7 +91,7 @@ function Mainpage() {
       {/* 인기 맛집 섹션 */}
       <section
         ref={recommendRef}
-        className="w-full mt-12 px-6 py-10 bg-white/50 border-t-2 border-dashed border-blue-200"
+        className="w-full mt-10 px-6 py-10 bg-white/50 border-t-2 border-b-2 border-dashed border-blue-200"
       >
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-deepBlue mb-4 flex items-center">
@@ -129,7 +129,7 @@ function Mainpage() {
       </section>
 
       {/* 지역별 추천 맛집 섹션 */}
-      <section className="w-full px-6 py-10 bg-white/70 border-t-2 border-dashed border-blue-200">
+      <section className="w-full px-6 py-10 bg-white/70 border-t-2 border-dashed border-blue-200 mt-5">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-deepBlue mb-4 flex items-center">
             <Sparkles className="mr-2 text-vintagePink" /> 지역별 맛집

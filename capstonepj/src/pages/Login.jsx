@@ -1,86 +1,63 @@
-import { useState } from "react";
+// pages/Login.jsx
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
+import { Apple } from "lucide-react";
+import logo from "../assets/mmm.png";
 import kakaoLogo from "../assets/kakaoLogo.png";
-import appleLogo from "../assets/appleLogo.png";
 
 function Login() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleKakaoLogin = () => {
+    const isLoggedIn = true;
+    if (isLoggedIn) {
+      navigate("/mainpage");
+    } else {
+      alert("로그인 실패!");
+    }
+  };
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsLoading(false);
-    alert("로그인 완료!");
-
-    navigate("/main");
+  const handleAppleLogin = () => {
+    alert("Apple 로그인은 iOS 또는 Mac 환경에서만 사용 가능합니다.");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-zinc-600 text-white text-center p-10 rounded-lg shadow-2xl w-full max-w-md mx-4">
-        {/* 로고 */}
-        <div className="flex justify-center mt-4 mb-8">
-          <img src="/logo.png" alt="로고" className="h-12" />
-        </div>
+    <div className="flex h-screen bg-white">
+      {/* 로고 영역 */}
+      <div className="w-[60%] flex items-center justify-end pr-4">
+        <img
+          src={logo}
+          alt="로고"
+          className="w-3/4 max-w-xs transition-transform duration-300 ease-in-out hover:scale-105"
+        />
+      </div>
 
-        {/* 로그인 폼 */}
-        <form onSubmit={handleLogin} className="space-y-5">
-          <input
-            type="mail"
-            placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-gray-200 text-gray-900 p-3 rounded focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-gray-200 text-gray-900 p-3 rounded focus:outline-none focus:ring-2 focus:ring-gray-300"
-          />
+      {/* 로그인 폼 */}
+      <div className="w-[90%] flex items-center justify-center px-8">
+        <div className="w-full max-w-sm">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">로그인</h2>
+
           <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-vintagePink hover:bg-palePink text-white p-3 rounded border border-white"
+            onClick={handleKakaoLogin}
+            className="w-full py-3 bg-[#FEE500] text-[#3C1E1E] font-semibold rounded-xl mb-4 hover:brightness-105 transition flex items-center justify-center gap-2"
           >
-            {isLoading ? "로그인 중..." : "로그인"}
+            <img src={kakaoLogo} alt="카카오 로고" className="w-6 h-6" />{" "}
+            {/* 카카오 로고 추가 */}
+            카카오로 로그인
           </button>
-        </form>
 
-        {/* 회원가입 */}
-        <p className="text-center text-gray-300 mt-6">
-          아직 계정이 없나요?{" "}
           <button
-            onClick={() => navigate("/signup")}
-            className="text-gray-300 hover:text-white underline"
+            onClick={handleAppleLogin}
+            className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:opacity-70 transition flex items-center justify-center gap-2"
           >
-            회원가입
+            <Apple size={18} /> Apple로 로그인
           </button>
-        </p>
 
-        {/* 소셜 로그인 */}
-        <div className="text-center">
-          <hr className="my-6 border-gray-500" />
-          <p className="text-sm mb-3">SNS 로그인</p>
-          <div className="flex justify-center space-x-4">
-            <button className="w-9 h-9 bg-yellow-500 rounded-full flex items-center justify-center">
-              <img src={kakaoLogo} alt="카카오 로그인" className="w-8 h-8" />
-            </button>
-            <button className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white">
-              <img src={appleLogo} alt="애플 로그인" className="w-8 h-8" />
-            </button>
-          </div>
+          <p className="text-xs text-gray-400 mt-6 text-center">
+            로그인 시 <span className="underline">이용약관</span> 및{" "}
+            <span className="underline">개인정보처리방침</span>에 동의합니다.
+          </p>
         </div>
-
-        {isLoading && <Loading />}
       </div>
     </div>
   );
