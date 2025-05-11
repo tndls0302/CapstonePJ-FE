@@ -3,7 +3,15 @@ import MainMap from "../components/MainMap";
 import { useLocation, useNavigate } from "react-router-dom";
 import MainModal from "../modals/mainModal";
 import BookmarkModal from "../modals/bookmarkModal";
-import { Sparkles, MapPin, Plane, Heart, Star, User } from "lucide-react"; // 추가된 아이콘
+import {
+  Sparkles,
+  MapPin,
+  Utensils,
+  Plane,
+  Heart,
+  Star,
+  User,
+} from "lucide-react"; // 추가된 아이콘
 import {
   topRestaurants,
   restaurantData,
@@ -113,14 +121,17 @@ function Mainpage() {
                 <h3 className="text-sm font-semibold text-gray-800">
                   {restaurant.name}
                 </h3>
-                <p className="text-xs text-gray-500 mt-1">
-                  ⭐ 평점: {restaurant.rating}
+                <p className="text-xs text-gray-500 mt-1 flex items-center">
+                  <Star size={16} color="#FEBD4B" className="mr-1" /> 평점:{" "}
+                  {restaurant.rating}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  📍 위치: {restaurant.address}
+                <p className="text-xs text-gray-500 mt-1 flex items-center">
+                  <MapPin size={16} color="#BC381D" className="mr-1" /> 위치:{" "}
+                  {restaurant.address}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  🍽️ {restaurant.menu} · {restaurant.price}
+                <p className="text-xs text-gray-500 mt-1 flex items-center">
+                  <Utensils size={16} color="#B3B72F" className="mr-1" />{" "}
+                  {restaurant.menu} · {restaurant.price}
                 </p>
               </div>
             ))}
@@ -165,17 +176,21 @@ function Mainpage() {
                       className="w-32 h-32 object-cover aspect-square rounded-lg mb-2"
                     />
                   </div>
+
                   <h3 className="text-sm font-semibold text-gray-800">
                     {place.name}
                   </h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    ⭐ 평점: {place.rating}
+                  <p className="text-xs text-gray-500 mt-1 flex items-center">
+                    <Star size={16} color="#FEBD4B" className="mr-1" /> 평점:{" "}
+                    {place.rating}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    📍 위치: {place.address}
+                  <p className="text-xs text-gray-500 mt-1 flex items-center">
+                    <MapPin size={16} color="#BC381D" className="mr-1" /> 위치:{" "}
+                    {place.address}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    🍽️ {place.menu} · {place.price}
+                  <p className="text-xs text-gray-500 mt-1 flex items-center">
+                    <Utensils size={16} color="#B3B72F" className="mr-1" />{" "}
+                    {place.menu} · {place.price}
                   </p>
                 </div>
               ))

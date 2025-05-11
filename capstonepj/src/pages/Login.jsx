@@ -1,4 +1,3 @@
-// pages/Login.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Apple } from "lucide-react";
