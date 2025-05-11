@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { X } from "lucide-react";
+import { X, Star, MapPin, Utensils } from "lucide-react";
 import { foodTravel } from "../components/FoodData";
 
 function MainModal({ isOpen, onClose }) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 검색 필터링
+  // 필터링: 타이틀 또는 아이템 내 문자열 포함 여부
   const filteredFoodTickets = foodTravel.filter(
     (ticket) =>
       ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -16,71 +16,70 @@ function MainModal({ isOpen, onClose }) {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-[500px] z-50 transition-transform duration-300 ${
+      className={`fixed top-0 right-0 h-full w-[400px] z-50 transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      <div className="absolute inset-0 bg-white/90 backdrop-blur-xl shadow-2xl rounded-l-3xl overflow-hidden">
+      <div className="h-full bg-white/90 backdrop-blur-lg shadow-2xl border-l-2 border-dashed border-vintagePink p-5 overflow-y-auto scrollbar-hide rounded-l-2xl">
         {/* 닫기 버튼 */}
-        <div className="flex justify-end p-4">
+        <div className="flex justify-end mb-4">
           <button
             onClick={onClose}
-            className="text-zinc-500 hover:text-zinc-800 transition-colors"
+            className="text-zinc-500 hover:text-black transition"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* 제목 */}
-        <div className="px-8 py-1">
-          <h2 className="text-2xl font-semibold text-deepBlue">
-            ✈️ 내 주변 맛집
-          </h2>
-        </div>
+        <h2 className="text-lg font-bold text-vintagePink mb-3">추천 맛집</h2>
 
-        {/* 상단 검색창 */}
-        <div className="px-7 py-5">
-          <input
-            type="text"
-            placeholder="검색"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-[27rem] p-2 rounded-md border border-gray-300 focus:border-vintagePink focus:ring-vintagePink focus:ring-1 focus:outline-none"
-          />
-        </div>
+        {/* 검색창 */}
+        <input
+          type="text"
+          placeholder="검색"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 mb-4 rounded-md border border-gray-300 focus:border-vintagePink focus:ring-vintagePink focus:ring-1 focus:outline-none"
+        />
 
-        {/* 내용 */}
-        <div className="px-8 pb-7 overflow-y-scroll h-[90%] space-y-6">
-          {filteredFoodTickets.map((ticket, index) => (
-            <div
-              key={index}
-              className="bg-blue-100 border-2 border-dashed border-blue-400 rounded-2xl p-6 shadow-md text-center"
-            >
-              <h3 className="text-xl font-bold text-blue-800 mb-2">
-                {ticket.title}
-              </h3>
-
-              {/* 음식점 이미지 */}
+        {/* 맛집 리스트 */}
+        {filteredFoodTickets.map((ticket, index) => (
+          <div
+            key={index}
+            className="mb-5 p-4 rounded-xl shadow-md border border-pink-200 bg-[#fff7f9] transition-transform hover:scale-[1.01]"
+          >
+            {/* 이미지 */}
+            <div className="flex justify-center mb-3">
               <img
                 src={ticket.image}
                 alt={ticket.title}
-                className="w-full h-32 object-cover rounded-xl mb-4"
+                className="w-32 h-32 object-cover rounded-lg shadow-sm"
               />
-
-              <ul className="mt-4 space-y-1 text-left text-black text-sm">
-                {ticket.items.map((item, idx) => (
-                  <li key={idx}>• {item}</li>
-                ))}
-              </ul>
-
-              <div className="mt-4 border-t border-dashed border-vintagePink pt-3">
-                <p className="font-mono text-xs tracking-widest">
-                  TICKET-{index + 1}-FOOD
-                </p>
-              </div>
             </div>
-          ))}
-        </div>
+
+            {/* 타이틀 */}
+            <h3 className="text-md font-semibold text-center text-vintagePink mb-2">
+              {ticket.title}
+            </h3>
+
+            {/* 정보 */}
+            <div className="text-sm text-gray-800 space-y-1 px-2">
+              <p className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-yellow-500" />
+                평점: {ticket.rating || "4.8"}
+              </p>
+              <p className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-rose-500" />
+                위치: {ticket.address || "부산 해운대구"}
+              </p>
+              <p className="flex items-center gap-2">
+                <Utensils className="w-4 h-4 text-pink-500" />
+                {ticket.menu || "떡볶이"} · {ticket.price || "₩6,000"}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

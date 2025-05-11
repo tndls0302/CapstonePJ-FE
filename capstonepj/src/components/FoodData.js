@@ -1,42 +1,57 @@
+import food1 from "../assets/food1.jpg";
+
+// components/FoodData.js
 export const foodTravel = [
   {
-    title: "🥟 홍콩반점",
-    image: "https://via.placeholder.com/150",
+    title: "홍콩반점",
+    image: food1,
+    rating: 4.5,
+    address: "서울 관악구",
+    menu: "짬뽕",
+    price: "₩6,000",
     items: ["짬뽕 - 6,000원", "볶음밥 - 5,500원", "탕수육 (소) - 9,000원"],
   },
   {
-    title: "🍛 삼청동 카레집",
-    image: "https://via.placeholder.com/150",
+    title: "삼청동 카레집",
+    image: food1,
+    rating: 4.3,
+    address: "서울 종로구",
+    menu: "치킨카레",
+    price: "₩7,500",
     items: ["치킨카레 - 7,500원", "야채카레 - 6,500원"],
   },
   {
-    title: "🍔 빠리버거",
-    image: "https://via.placeholder.com/150",
+    title: "빠리버거",
+    image: food1,
+    rating: 4.6,
+    address: "서울 마포구",
+    menu: "치즈버거 세트",
+    price: "₩6,900",
     items: ["치즈버거 세트 - 6,900원", "불고기버거 단품 - 4,800원"],
   },
   {
-    title: "🍜 멘야고코로",
-    image: "https://via.placeholder.com/150",
+    title: "멘야고코로",
+    image: food1,
     items: ["소유라멘 - 8,500원", "미소라멘 - 7,900원"],
   },
   {
-    title: "🍙 김밥천국",
-    image: "https://via.placeholder.com/150",
+    title: "김밥천국",
+    image: food1,
     items: ["참치김밥 정식 - 5,500원", "라볶이 - 4,500원"],
   },
   {
-    title: "🍗 또래오래",
-    image: "https://via.placeholder.com/150",
+    title: "또래오래",
+    image: food1,
     items: ["순살 치킨 한 조각 - 1,800원", "치킨마요덮밥 - 5,900원"],
   },
   {
-    title: "🍜 명동우동",
-    image: "https://via.placeholder.com/150",
+    title: "명동우동",
+    image: food1,
     items: ["우동 - 4,500원", "모듬튀김 - 3,000원"],
   },
   {
-    title: "🍙 바르다김선생",
-    image: "https://via.placeholder.com/150",
+    title: "바르다김선생",
+    image: food1,
     items: ["제육김밥 - 6,000원", "육개장컵밥 - 7,800원"],
   },
 ];
@@ -45,7 +60,7 @@ export const topRestaurants = [
   {
     id: 1,
     name: "압구정 김밥천국",
-    image: "/images/top1.jpg",
+    image: food1,
     menu: "김밥 세트",
     price: "₩5,000",
     rating: "4.9",
@@ -54,7 +69,7 @@ export const topRestaurants = [
   {
     id: 2,
     name: "해운대 분식",
-    image: "/images/top2.jpg",
+    image: food1,
     menu: "떡볶이",
     price: "₩6,000",
     rating: "4.8",
@@ -63,7 +78,7 @@ export const topRestaurants = [
   {
     id: 3,
     name: "제주 삼다김밥",
-    image: "/images/top3.jpg",
+    image: food1,
     menu: "김밥",
     price: "₩4,500",
     rating: "4.7",
@@ -87,7 +102,7 @@ export const restaurantData = {
     {
       id: 101,
       name: "강남 즉석 떡볶이",
-      image: "/images/seoul1.jpg",
+      image: food1,
       menu: "떡볶이",
       price: "₩7,500",
       rating: "4.8",
@@ -96,7 +111,7 @@ export const restaurantData = {
     {
       id: 102,
       name: "홍대 김밥나라",
-      image: "/images/seoul2.jpg",
+      image: food1,
       menu: "김밥+라면 세트",
       price: "₩8,000",
       rating: "4.6",
@@ -107,7 +122,7 @@ export const restaurantData = {
     {
       id: 201,
       name: "수원 떡볶이집",
-      image: "/images/gyeonggi1.jpg",
+      image: food1,
       menu: "떡볶이",
       price: "₩6,500",
       rating: "4.7",
@@ -116,7 +131,7 @@ export const restaurantData = {
     {
       id: 202,
       name: "일산 순대국집",
-      image: "/images/gyeonggi2.jpg",
+      image: food1,
       menu: "순대국",
       price: "₩7,000",
       rating: "4.5",
@@ -127,7 +142,7 @@ export const restaurantData = {
     {
       id: 301,
       name: "강릉 커피거리",
-      image: "/images/gangwon1.jpg",
+      image: food1,
       menu: "아메리카노",
       price: "₩5,000",
       rating: "4.6",
@@ -136,7 +151,7 @@ export const restaurantData = {
     {
       id: 302,
       name: "춘천 닭갈비집",
-      image: "/images/gangwon2.jpg",
+      image: food1,
       menu: "닭갈비",
       price: "₩8,500",
       rating: "4.8",
@@ -147,7 +162,7 @@ export const restaurantData = {
     {
       id: 401,
       name: "전주 비빔밥집",
-      image: "/images/jeolla1.jpg",
+      image: food1,
       menu: "비빔밥",
       price: "₩7,000",
       rating: "4.7",
@@ -156,7 +171,7 @@ export const restaurantData = {
     {
       id: 402,
       name: "광주 떡갈비 분식",
-      image: "/images/jeolla2.jpg",
+      image: food1,
       menu: "떡갈비덮밥",
       price: "₩9,800",
       rating: "4.7",
@@ -167,7 +182,7 @@ export const restaurantData = {
     {
       id: 501,
       name: "광안리 분식집",
-      image: "/images/busan1.jpg",
+      image: food1,
       menu: "튀김 모듬",
       price: "₩9,000",
       rating: "4.7",
@@ -176,7 +191,7 @@ export const restaurantData = {
     {
       id: 502,
       name: "서면 컵밥 맛집",
-      image: "/images/busan2.jpg",
+      image: food1,
       menu: "컵밥",
       price: "₩6,500",
       rating: "4.5",
@@ -187,7 +202,7 @@ export const restaurantData = {
     {
       id: 601,
       name: "경산 떡볶이",
-      image: "/images/gyeongsang1.jpg",
+      image: food1,
       menu: "떡볶이",
       price: "₩6,200",
       rating: "4.5",
@@ -196,7 +211,7 @@ export const restaurantData = {
     {
       id: 602,
       name: "포항 회덮밥",
-      image: "/images/gyeongsang2.jpg",
+      image: food1,
       menu: "회덮밥",
       price: "₩12,000",
       rating: "4.6",
@@ -207,7 +222,7 @@ export const restaurantData = {
     {
       id: 701,
       name: "대전 카페거리",
-      image: "/images/chungcheong1.jpg",
+      image: food1,
       menu: "커피+케이크 세트",
       price: "₩7,500",
       rating: "4.7",
@@ -216,7 +231,7 @@ export const restaurantData = {
     {
       id: 702,
       name: "천안 순대국",
-      image: "/images/chungcheong2.jpg",
+      image: food1,
       menu: "순대국",
       price: "₩7,000",
       rating: "4.5",
@@ -227,7 +242,7 @@ export const restaurantData = {
     {
       id: 801,
       name: "제주 흑돼지 덮밥",
-      image: "/images/jeju1.jpg",
+      image: food1,
       menu: "흑돼지덮밥",
       price: "₩9,900",
       rating: "4.9",
@@ -236,7 +251,7 @@ export const restaurantData = {
     {
       id: 802,
       name: "애월 카페거리",
-      image: "/images/jeju2.jpg",
+      image: food1,
       menu: "아메리카노+빵 세트",
       price: "₩6,500",
       rating: "4.6",

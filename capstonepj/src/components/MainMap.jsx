@@ -128,7 +128,7 @@ function MainMap() {
         mapCenter &&
         (userLocation.lat !== mapCenter.lat ||
           userLocation.lng !== mapCenter.lng) && (
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
             <button
               onClick={() => {
                 console.log("재검색 위치:", mapCenter);
