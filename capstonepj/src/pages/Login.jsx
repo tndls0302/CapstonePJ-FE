@@ -37,15 +37,16 @@ function Login() {
         <div className="w-full max-w-sm">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">로그인</h2>
 
+          {/* 카카오 로그인 */}
           <button
             onClick={handleKakaoLogin}
             className="w-full py-3 bg-[#FEE500] text-[#3C1E1E] font-semibold rounded-xl mb-4 hover:brightness-105 transition flex items-center justify-center gap-2"
           >
             <img src={kakaoLogo} alt="카카오 로고" className="w-6 h-6" />{" "}
-            {/* 카카오 로고 추가 */}
             카카오로 로그인
           </button>
 
+          {/* Apple 로그인 */}
           <button
             onClick={handleAppleLogin}
             className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:opacity-70 transition flex items-center justify-center gap-2"
