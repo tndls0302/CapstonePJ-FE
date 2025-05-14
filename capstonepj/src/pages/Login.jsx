@@ -1,19 +1,16 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Apple } from "lucide-react";
 import logo from "../assets/mmm.png";
 import kakaoLogo from "../assets/kakaoLogo.png";
 
 function Login() {
-  const navigate = useNavigate();
-
   const handleKakaoLogin = () => {
-    const isLoggedIn = true;
-    if (isLoggedIn) {
-      navigate("/mainpage");
-    } else {
-      alert("로그인 실패!");
-    }
+    const KAKAO_REST_API_KEY = "f80a0259d3afd5dbe8a014ab127b63cc";
+    const REDIRECT_URI = "http://localhost:5173/auth/kakao/callback";
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+    // 카카오 로그인 페이지로 리다이렉트
+    window.location.href = kakaoAuthUrl;
   };
 
   const handleAppleLogin = () => {
