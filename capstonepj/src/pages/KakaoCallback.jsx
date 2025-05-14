@@ -8,13 +8,11 @@ function KakaoCallback() {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
 
-    // 임시로 로컬에서 액세스 토큰 처리 (백엔드가 준비되면 여기에 요청 추가)
+    // 임시로 로컬에서 액세스 토큰 처리
     const fetchKakaoToken = async () => {
       try {
-        // 임시로 로컬에서 accessToken 반환
-        const accessToken = "temporaryAccessToken"; // 임시 토큰
-
-        // 로컬 저장소에 accessToken 저장
+        // 로컬에서 임시 토큰 반환 및 저장
+        const accessToken = "temporaryAccessToken";
         localStorage.setItem("accessToken", accessToken);
 
         // 로그인 성공 시 메인 페이지로 이동
