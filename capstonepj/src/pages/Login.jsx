@@ -1,7 +1,7 @@
 import React from "react";
-import { Apple } from "lucide-react";
 import logo from "../assets/mmm.png";
-import kakaoLogo from "../assets/kakaoLogo.png";
+import kakaoLogo from "../assets/kakaologin.png";
+import GoogleLogo from "../assets/googlelogin.png";
 
 function Login() {
   const handleKakaoLogin = () => {
@@ -13,8 +13,8 @@ function Login() {
     window.location.href = kakaoAuthUrl;
   };
 
-  const handleAppleLogin = () => {
-    alert("Apple 로그인은 iOS 또는 Mac 환경에서만 사용 가능합니다.");
+  const handleGoogleLogin = () => {
+    alert("구글로그인");
   };
 
   return (
@@ -36,18 +36,19 @@ function Login() {
           {/* 카카오 로그인 */}
           <button
             onClick={handleKakaoLogin}
-            className="w-full py-3 bg-[#FEE500] text-[#3C1E1E] font-semibold rounded-xl mb-4 hover:brightness-105 transition flex items-center justify-center gap-2"
+            className="w-full py-3 bg-[#FEE500] text-[#3C1E1E] font-semibold rounded-xl mb-4 hover:brightness-90 transition flex items-center justify-center gap-2"
           >
-            <img src={kakaoLogo} alt="카카오 로고" className="w-6 h-6" />{" "}
-            카카오로 로그인
+            <img src={kakaoLogo} alt="카카오 로고" className="w-7 h-7" /> 카카오
+            로그인
           </button>
 
-          {/* Apple 로그인 */}
+          {/* 구글 로그인 */}
           <button
-            onClick={handleAppleLogin}
-            className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:opacity-70 transition flex items-center justify-center gap-2"
+            onClick={handleGoogleLogin}
+            className="w-full py-3 bg-white text-[#3C1E1E] font-semibold border rounded-lg mb-4 hover:brightness-90 transition flex items-center justify-center gap-2"
           >
-            <Apple size={18} /> Apple로 로그인
+            <img src={GoogleLogo} alt="구글 로고" className="w-6 h-6" /> 구글
+            로그인
           </button>
 
           <p className="text-xs text-gray-400 mt-6 text-center">
