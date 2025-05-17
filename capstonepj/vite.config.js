@@ -7,4 +7,13 @@ export default defineConfig({
   optimizeDeps: {
     include: ["lucide-react"],
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://mixmix2.store",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
