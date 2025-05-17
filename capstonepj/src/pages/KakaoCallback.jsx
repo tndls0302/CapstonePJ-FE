@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-//import axios from "axios";
+import axios from "axios";
 
 function KakaoCallback() {
   const navigate = useNavigate();
@@ -8,14 +8,18 @@ function KakaoCallback() {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
 
-    // 임시로 로컬에서 액세스 토큰 처리
     const fetchKakaoToken = async () => {
       try {
-        // 로컬에서 임시 토큰 반환 및 저장
-        const accessToken = "temporaryAccessToken";
-        localStorage.setItem("accessToken", accessToken);
+        const res = await axios.get(
+          `https://mixmix2.store/api/oauth2/callback/kakao?code=${code}`,
+          { withCredentials: true }
+        );
 
-        // 로그인 성공 시 메인 페이지로 이동
+        const { accessToken, refreshToken, nickname } = res.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("nickname", nickname);
+
         navigate("/mainpage");
       } catch (err) {
         console.error("로그인 실패:", err);
@@ -23,28 +27,6 @@ function KakaoCallback() {
         navigate("/login");
       }
     };
-
-    /*
-    const fetchKakaoToken = async () => {
-      try { 
-        const res = await axios.post(
-          "http://localhost:5173/auth/kakao", // 백엔드 API 주소
-          { code },
-          { withCredentials: true }
-        );
-
-        // accessToken / userInfo 저장
-        const { accessToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-
-        // 로그인 성공 시 메인페이지로 이동
-        navigate("/mainpage");
-      } catch (err) {
-        console.error("로그인 실패:", err);
-        alert("로그인에 실패했습니다.");
-        navigate("/login");
-      }
-    }; */
 
     if (code) {
       fetchKakaoToken();
