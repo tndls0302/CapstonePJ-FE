@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/mmm.png";
 import kakaoLogo from "../assets/kakaologin.png";
 import GoogleLogo from "../assets/googlelogin.png";
 
 function Login() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+
+    if (url.searchParams.has("code")) {
+      url.searchParams.delete("code");
+      window.history.replaceState({}, document.title, url.toString());
+    }
+
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      navigate("/mainpage");
+    }
+  }, [navigate]);
+
   const handleKakaoLogin = () => {
-    const KAKAO_REST_API_KEY = "f80a0259d3afd5dbe8a014ab127b63cc";
-    const REDIRECT_URI = "http://localhost:5173/auth/kakao/callback";
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=f80a0259d3afd5dbe8a014ab127b63cc&redirect_uri=http://localhost:5173/auth/kakao/callback&response_type=code`;
+    const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
     window.location.href = kakaoAuthUrl;
   };
