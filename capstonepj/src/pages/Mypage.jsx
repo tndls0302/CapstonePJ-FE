@@ -19,8 +19,8 @@ function MyPage() {
   };
 
   const closeModal = () => {
-    setCurrentModal(null); // currentModal을 null로 설정하여 모달을 닫기
-    navigate("/", { replace: true }); // URL에서 모달 파라미터를 제거
+    setCurrentModal(null);
+    navigate("/", { replace: true });
   };
 
   const user = {
@@ -46,7 +46,7 @@ function MyPage() {
         likes: 30,
       },
     ],
-    reports: 10, // 제보 갯수 예시
+    reports: 10,
   };
 
   // 평균 평점 계산 함수

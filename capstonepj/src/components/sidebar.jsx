@@ -1,53 +1,61 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Plane, Star, Heart, User, Settings } from "lucide-react"; // 아이콘 불러오기
 
 function Sidebar({ openModal }) {
   const navigate = useNavigate();
 
   return (
-    <aside className="w-24 bg-zinc-700 text-white flex flex-col items-center py-10 rounded-r-2xl shadow-lg">
+    <aside className="w-24 bg-white/90 backdrop-blur-md shadow-lg rounded-r-2xl flex flex-col items-center py-10 text-deepBlue">
       <div className="flex flex-col items-center space-y-8">
-        {/* ✈️ 버튼 - 메인 이동 + 모달 열기 */}
+        {/* 홈 */}
         <button
-          className="flex flex-col items-center hover:scale-110 transition-transform"
+          className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold text-sm"
           onClick={() => openModal("main")}
+          aria-label="맛집 탐방 모달 열기"
         >
-          <span className="text-2xl">✈️</span>
-          <span className="text-xs text-gray-300 font-semibold mt-1">홈</span>
+          <Plane size={20} />
+          <span>맛집 탐방</span>
         </button>
 
-        {/* ⭐ 버튼 - TopPick 이동 */}
+        {/* 맛집 추천 */}
         <button
-          className="flex flex-col items-center hover:scale-110 transition-transform"
-          onClick={() => navigate("/toppick")}
+          className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold text-sm"
+          onClick={() => navigate("/", { state: { showRecommend: true } })}
+          aria-label="맛집 추천 섹션 이동"
         >
-          <span className="text-2xl">⭐</span>
-          <span className="text-xs text-gray-300 font-semibold mt-1">추천</span>
+          <Star size={20} />
+          <span>추천</span>
         </button>
 
-        {/* ❤️ 버튼 - 북마크 모달 열기 */}
+        {/* 찜 */}
         <button
-          className="flex flex-col items-center hover:scale-110 transition-transform"
+          className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold text-sm"
           onClick={() => openModal("bookmark")}
+          aria-label="찜 모달 열기"
         >
-          <span className="text-2xl">❤️</span>
-          <span className="text-xs text-gray-300 font-semibold mt-1">찜</span>
+          <Heart size={20} />
+          <span>찜</span>
         </button>
 
-        {/* 🍀 버튼 - 마이페이지 이동 */}
+        {/* 마이페이지 */}
         <button
-          className="flex flex-col items-center hover:scale-110 transition-transform"
+          className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold text-sm"
           onClick={() => navigate("/mypage")}
+          aria-label="마이페이지 이동"
         >
-          <span className="text-2xl">🍀</span>
-          <span className="text-xs text-gray-300 font-semibold mt-1">MY</span>
+          <User size={20} />
+          <span>MY</span>
         </button>
       </div>
 
-      {/* 설정 ⚙️ 버튼 (아직 기능 없음) */}
-      <button className="flex flex-col items-center hover:scale-110 transition-transform mt-auto pt-10">
-        <span className="text-2xl">⚙️</span>
-        <span className="text-xs text-gray-300 font-semibold mt-1">설정</span>
+      {/* 설정 버튼 - 하단 고정 */}
+      <button
+        className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold text-sm mt-auto pt-10"
+        aria-label="설정"
+      >
+        <Settings size={24} />
+        <span>설정</span>
       </button>
     </aside>
   );

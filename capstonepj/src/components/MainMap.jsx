@@ -1,43 +1,39 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import useUserLocation from "../hooks/userLocation";
+import { getPlacesByBounds } from "../api/places";
 
 function MainMap() {
   const userLocation = useUserLocation(); // 사용자 위치
   const [mapCenter, setMapCenter] = useState(null); // 지도 중심
-  const [restaurants, setRestaurants] = useState([]); // 음식점 리스트
+  const [places, setPlaces] = useState([]); // 장소 리스트
   const [loading, setLoading] = useState(false); // 로딩 상태
+  const [bounds, setBounds] = useState(null); // 지도 범위 저장
 
   useEffect(() => {
     if (userLocation) {
       setMapCenter(userLocation);
-      // 예시 데이터
-      setRestaurants([
-        {
-          id: 1,
-          name: "김밥천국",
-          lat: userLocation.lat + 0.003,
-          lng: userLocation.lng + 0.003,
-          price: 5000,
-        },
-        {
-          id: 2,
-          name: "맛있는 분식집",
-          lat: userLocation.lat - 0.003,
-          lng: userLocation.lng - 0.003,
-          price: 7000,
-        },
-        {
-          id: 3,
-          name: "돼지국밥 명가",
-          lat: userLocation.lat + 0.004,
-          lng: userLocation.lng - 0.003,
-          price: 8000,
-        },
-      ]);
     }
   }, [userLocation]);
 
+  // 지도 범위 변경 핸들러
+  const handleBoundsChanged = (map) => {
+    const b = map.getBounds();
+    const sw = b.getSouthWest();
+    const ne = b.getNorthEast();
+
+    setBounds({
+      minLat: sw.getLat(),
+      maxLat: ne.getLat(),
+      minLng: sw.getLng(),
+      maxLng: ne.getLng(),
+    });
+
+    const center = map.getCenter();
+    setMapCenter({ lat: center.getLat(), lng: center.getLng() });
+  };
+
+  /*
   // 초기 중심 좌표 설정
   useEffect(() => {
     if (userLocation) {
@@ -66,7 +62,49 @@ function MainMap() {
   const handleCenterChanged = (map) => {
     const center = map.getCenter();
     setMapCenter({ lat: center.getLat(), lng: center.getLng() });
-  };
+  }; 
+  */
+
+  // 장소 데이터 호출 함수
+  const fetchPlaces = useCallback(async () => {
+    if (!bounds) return;
+
+    // 디버깅용 로그 및 유효성 검사
+    const { minLat, maxLat, minLng, maxLng } = bounds;
+    console.log("지도 범위 파라미터 확인", bounds);
+    if (
+      minLat == null ||
+      maxLat == null ||
+      minLng == null ||
+      maxLng == null ||
+      isNaN(minLat) ||
+      isNaN(maxLat) ||
+      isNaN(minLng) ||
+      isNaN(maxLng)
+    ) {
+      console.error("유효하지 않은 지도 범위입니다.", bounds);
+      return;
+    }
+    //
+
+    setLoading(true);
+    try {
+      const data = await getPlacesByBounds(bounds);
+      setPlaces(data);
+      console.log("장소 데이터:", data);
+    } catch (error) {
+      console.error(
+        "장소 불러오기 실패:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [bounds]);
+
+  useEffect(() => {
+    fetchPlaces();
+  }, [fetchPlaces]);
 
   if (!userLocation || !mapCenter) {
     return <div>지도를 불러오는 중...</div>;
@@ -76,7 +114,11 @@ function MainMap() {
     <div className="w-full h-screen">
       <Map
         center={mapCenter}
-        onCenterChanged={handleCenterChanged}
+        onCenterChanged={(map) => {
+          const center = map.getCenter();
+          setMapCenter({ lat: center.getLat(), lng: center.getLng() });
+        }}
+        onBoundsChanged={handleBoundsChanged}
         style={{ width: "100%", height: "100%" }}
         level={5}
       >
@@ -92,17 +134,22 @@ function MainMap() {
           </div>
         </CustomOverlayMap>
 
-        {/* 음식점 마커 */}
-        {restaurants.map((r) => (
-          <React.Fragment key={r.id}>
-            <MapMarker position={{ lat: r.lat, lng: r.lng }} />
+        {/* 장소 마커 */}
+        {places.map((place) => (
+          <React.Fragment key={place.placeId}>
+            <MapMarker
+              position={{ lat: place.latitude, lng: place.longitude }}
+            />
             <CustomOverlayMap
-              position={{ lat: r.lat, lng: r.lng }}
+              position={{ lat: place.latitude, lng: place.longitude }}
               yAnchor={1.2}
             >
               <div className="bg-white border-2 border-deepBlue text-black font-semibold px-4 py-2 rounded-md shadow text-xs whitespace-nowrap">
-                {r.name}
-                <br />₩ {r.price.toLocaleString()}원
+                <br />₩{" "}
+                {Number(place.price1)
+                  ? Number(place.price1).toLocaleString()
+                  : "-"}
+                원
               </div>
             </CustomOverlayMap>
           </React.Fragment>
@@ -111,15 +158,15 @@ function MainMap() {
 
       {/* 로딩 중 */}
       {loading && (
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded shadow z-50 text-sm">
+        <div className="absolute top-24 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded shadow z-50 text-sm">
           음식점을 불러오는 중...
         </div>
       )}
 
       {/* 음식점이 없는 경우 */}
-      {!loading && restaurants.length === 0 && (
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded shadow z-50 text-sm">
-          주변에 음식점이 없습니다.
+      {!loading && places.length === 0 && (
+        <div className="absolute top-24 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded shadow z-50 text-sm">
+          조건에 알맞는 음식점이 없습니다.
         </div>
       )}
 
@@ -130,10 +177,7 @@ function MainMap() {
           userLocation.lng !== mapCenter.lng) && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
             <button
-              onClick={() => {
-                console.log("재검색 위치:", mapCenter);
-                fetchRestaurants(); // 지도 중심 기준으로 음식점 불러오기
-              }}
+              onClick={fetchPlaces}
               className="w-60 border-2 border-vintagePink text-gray-600 bg-white px-7 py-2 rounded-full shadow-lg font-semibold hover:bg-vintagePink hover:text-white"
             >
               여기서 재검색

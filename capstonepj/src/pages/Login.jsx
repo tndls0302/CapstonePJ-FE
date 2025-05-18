@@ -7,9 +7,8 @@ function Login() {
   const handleKakaoLogin = () => {
     const KAKAO_REST_API_KEY = "f80a0259d3afd5dbe8a014ab127b63cc";
     const REDIRECT_URI = "http://localhost:5173/auth/kakao/callback";
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=f80a0259d3afd5dbe8a014ab127b63cc&redirect_uri=http://localhost:5173/auth/kakao/callback&response_type=code`;
 
-    // 카카오 로그인 페이지로 리다이렉트
     window.location.href = kakaoAuthUrl;
   };
 
@@ -19,7 +18,6 @@ function Login() {
 
   return (
     <div className="flex h-screen bg-white">
-      {/* 로고 영역 */}
       <div className="w-[60%] flex items-center justify-end pr-4">
         <img
           src={logo}
@@ -28,7 +26,6 @@ function Login() {
         />
       </div>
 
-      {/* 로그인 폼 */}
       <div className="w-[90%] flex items-center justify-center px-8">
         <div className="w-full max-w-sm">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">로그인</h2>
