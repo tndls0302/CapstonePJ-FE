@@ -1,6 +1,5 @@
 import food1 from "../assets/food1.jpg";
 
-// components/FoodData.js
 export const foodTravel = [
   {
     title: "홍콩반점",
@@ -26,7 +25,7 @@ export const foodTravel = [
     rating: 4.6,
     address: "서울 마포구",
     menu: "치즈버거 세트",
-    price: "₩6,900",
+    price: "₩5,900",
     items: ["치즈버거 세트 - 6,900원", "불고기버거 단품 - 4,800원"],
   },
   {
@@ -35,8 +34,8 @@ export const foodTravel = [
     rating: 4.8,
     address: "서울 양천구",
     menu: "소유라멘",
-    price: "₩8,500",
-    items: ["소유라멘 - 8,500원", "미소라멘 - 7,900원"],
+    price: "₩7,500",
+    items: ["소유라멘 - 7,500원", "미소라멘 - 7,900원"],
   },
   {
     title: "김밥천국",
@@ -221,7 +220,7 @@ export const restaurantData = {
       name: "포항 회덮밥",
       image: food1,
       menu: "회덮밥",
-      price: "₩12,000",
+      price: "₩9,800",
       rating: "4.6",
       address: "경상 포항시",
     },
@@ -232,7 +231,7 @@ export const restaurantData = {
       name: "대전 카페거리",
       image: food1,
       menu: "커피+케이크 세트",
-      price: "₩7,500",
+      price: "₩8,500",
       rating: "4.7",
       address: "충청 대전시",
     },
@@ -252,7 +251,7 @@ export const restaurantData = {
       name: "제주 흑돼지 덮밥",
       image: food1,
       menu: "흑돼지덮밥",
-      price: "₩9,900",
+      price: "₩8,900",
       rating: "4.9",
       address: "제주 서귀포시",
     },
