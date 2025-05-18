@@ -1,92 +1,170 @@
-import React, { useState } from "react";
-import { X, Heart } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { X, Heart, Star, MapPin, Utensils } from "lucide-react";
+import { toggleBookmarks, getBookmarks } from "../api/bookmarks";
 
 function BookmarkModal({ isOpen, onClose }) {
-  // 예시 맛집 목록
-  const dummyStores = [
-    { id: 1, name: "맛집 1호", location: "서울 강남구", rating: 4.2 },
-    { id: 2, name: "맛집 2호", location: "서울 마포구", rating: 4.6 },
-    { id: 3, name: "맛집 3호", location: "서울 종로구", rating: 4.0 },
-    { id: 4, name: "맛집 4호", location: "서울 용산구", rating: 4.8 },
-    { id: 5, name: "맛집 5호", location: "서울 성동구", rating: 4.1 },
-    { id: 6, name: "맛집 6호", location: "서울 서초구", rating: 4.3 },
-    { id: 7, name: "맛집 7호", location: "서울 은평구", rating: 4.0 },
-    { id: 8, name: "맛집 8호", location: "서울 송파구", rating: 4.7 },
-    { id: 9, name: "맛집 9호", location: "서울 중랑구", rating: 4.5 },
-    { id: 10, name: "맛집 10호", location: "서울 강북구", rating: 4.4 },
-  ];
+  const [bookmarks, setBookmarks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  /* //예시 맛집 목록
+  const dummyStores = [
+    {
+      id: 1,
+      name: "삼거리 떡볶이",
+      location: "서울 강남구",
+      rating: 4.2,
+      image: "https://via.placeholder.com/150",
+      menu: "떡볶이",
+      price: "₩6,000",
+    },
+    {
+      id: 2,
+      name: "마포 치킨하우스",
+      location: "서울 마포구",
+      rating: 4.6,
+      image: "https://via.placeholder.com/150",
+      menu: "치킨",
+      price: "₩12,000",
+    },
+    {
+      id: 3,
+      name: "종로 김밥천국",
+      location: "서울 종로구",
+      rating: 4.0,
+      image: "https://via.placeholder.com/150",
+      menu: "김밥",
+      price: "₩4,500",
+    },
+  ]; 
+  
   // 찜 상태 관리
-  const [bookmarks, setBookmarks] = useState({});
+  const [bookmarks, setBookmarks] = useState(() =>
+    dummyStores.reduce((acc, store) => {
+      acc[store.id] = true;
+      return acc;
+    }, {})
+  );
 
   // 하트 토글 함수
-  const toggleBookmark = (id) => {
-    setBookmarks((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const toggleBookmarks = (id) => {
+    setBookmarks((prev) => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
   };
+  */
+
+  const fetchBookmarks = async () => {
+    try {
+      setLoading(true);
+      const data = await getBookmarks();
+      setBookmarks(data);
+    } catch (error) {
+      console.error("찜 목록 가져오기 실패", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggle = async (placeId) => {
+    try {
+      await toggleBookmarks(placeId);
+      fetchBookmarks();
+    } catch (error) {
+      console.error("찜 토글 실패", error);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) fetchBookmarks();
+  }, [isOpen]);
+
+  // 찜한 가게 리스트 필터링
+  // const bookmarkedStores = dummyStores.filter((store) => bookmarks[store.id]);
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-[500px] z-50 transition-transform duration-300 ${
-        isOpen ? "translate-x-0" : "translate-x-full"
+      className={`fixed top-0 left-0 h-full w-[380px] z-50 transition-transform duration-300 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-        <div className="bg-white rounded-2xl shadow-2xl w-[90%] max-w-[450px] border-4 border-dashed border-red-300 relative overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-start pl-8 bg-black/20 overflow-x-hidden">
+        <div
+          className="bg-white rounded-2xl shadow-2xl w-[90%] max-w-[360px] border-4 border-dashed border-rose-300 relative
+               max-h-[90vh] overflow-y-auto scrollbar-hide"
+        >
           {/* 헤더 */}
-          <div className="bg-red-100 px-6 py-4 flex justify-between items-center border-b-2 border-dashed border-red-300">
-            <h2 className="text-xl font-bold text-red-700">❤️ 찜하기</h2>
+          <div className="bg-rose-100 px-6 py-4 flex justify-between items-center border-b-2 border-dashed border-rose-300">
+            <h2 className="text-xl font-bold text-rose-700">❤️ 찜한 가게</h2>
             <button
               onClick={onClose}
               className="text-zinc-500 hover:text-zinc-800"
+              aria-label="모달 닫기"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          {/* 절취선 */}
+          {/* 절취선 모양 */}
           <div className="h-4 bg-white relative">
-            <div className="absolute top-0 left-0 w-full h-full border-t border-dashed border-red-400" />
+            <div className="absolute top-0 left-0 w-full h-full border-t border-dashed border-rose-400" />
           </div>
 
           {/* 본문 */}
-          <div className="px-6 py-4 max-h-[70vh] overflow-y-auto">
-            <ul className="space-y-4">
-              {dummyStores.map((store) => (
-                <li
+          <div className="px-4 py-4 max-h-[70vh] overflow-y-auto">
+            {loading ? (
+              <p className="text-center text-rose-400">불러오는 중...</p>
+            ) : bookmarks.length === 0 ? (
+              <p className="text-center text-rose-400 font-semibold">
+                찜한 가게가 없습니다.
+              </p>
+            ) : (
+              bookmarks.map((store) => (
+                <div
                   key={store.id}
-                  className="bg-red-50 border border-red-200 rounded-xl p-4 shadow hover:bg-red-100 transition-all flex items-center justify-between"
+                  className="mb-5 p-4 rounded-xl shadow-md border border-rose-200 bg-[#fff7f9] transition-transform hover:scale-[1.01]"
                 >
-                  <div>
-                    <h3 className="font-bold text-lg text-red-700">
-                      🍜 {store.name}
-                    </h3>
-                    <p className="text-sm text-zinc-600 mt-1">
+                  <div className="flex justify-center mb-3">
+                    <img
+                      src={store.image}
+                      alt={store.name}
+                      className="w-32 h-32 object-cover rounded-lg shadow-sm"
+                    />
+                  </div>
+                  <h3 className="text-md font-semibold text-center text-rose-600 mb-2">
+                    {store.name}
+                  </h3>
+                  <div className="text-sm text-gray-800 space-y-1 px-2">
+                    <p className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-yellow-500" />
+                      평점: {store.rating}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-rose-500" />
                       위치: {store.location}
                     </p>
-                    <p className="text-sm text-yellow-600 mt-1">
-                      ⭐ 평점: {store.rating}
+                    <p className="flex items-center gap-2">
+                      <Utensils className="w-4 h-4 text-pink-500" />
+                      {store.menu} · {store.price}
                     </p>
                   </div>
-                  <button
-                    onClick={() => toggleBookmark(store.id)}
-                    className="text-red-500 hover:scale-110 transition-transform"
-                  >
-                    <Heart
-                      className="w-6 h-6"
-                      fill={bookmarks[store.id] ? "currentColor" : "none"}
-                    />
-                  </button>
-                </li>
-              ))}
-            </ul>
+                  <div className="flex justify-center mt-3">
+                    <button
+                      onClick={() => handleToggle(store.id)}
+                      className="text-red-500 hover:scale-110 transition-transform"
+                    >
+                      <Heart className="w-6 h-6" fill="currentColor" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
 
-          {/* 바코드 영역 */}
-          <div className="bg-red-100 px-6 py-3 text-center border-t-2 border-dashed border-red-300 text-sm text-red-700 tracking-widest font-mono">
-            BOOKMARK-ID: 20250426-LIKE ❤️
+          {/* 바코드 모양 */}
+          <div className="bg-rose-100 px-6 py-3 text-center border-t-2 border-dashed border-rose-300 text-sm text-rose-700 tracking-widest font-mono">
+            BOOKMARK-ID: I LIKE !t ❤️
           </div>
         </div>
       </div>
