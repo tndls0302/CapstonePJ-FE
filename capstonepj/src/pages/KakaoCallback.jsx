@@ -25,15 +25,14 @@ function KakaoCallback() {
 
     const KakaoLogin = async () => {
       try {
-        const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
+        const BASE_API_URL = import.meta.env.VITE_BACKEND_API_URL;
         const tokenRes = await axios.get(
-          `${BASE_API_URL}/oauth2/callback/kakao?code=${code}`
+          `${BASE_API_URL}/api/oauth2/callback/kakao?code=${code}`
         );
 
         console.log("토큰 응답 데이터:", tokenRes.data);
 
         const { accessToken, refreshToken } = tokenRes.data;
-
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
