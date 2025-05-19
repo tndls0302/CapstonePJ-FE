@@ -11,12 +11,12 @@ import KakaoCallback from "./pages/KakaoCallback";
 function App() {
   return (
     <Routes>
-      <Route path="*" element={<NotFound />} />
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Mainpage />} />
       <Route path="/toppick" element={<TopPick />} />
       <Route path="/mypage" element={<Mypage />} />
-      <Route path="/auth/kakao/callback" element={<KakaoCallback />} />
+      <Route path="/oauth/kakao" element={<KakaoCallback />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

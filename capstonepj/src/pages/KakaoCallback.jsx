@@ -11,33 +11,38 @@ function KakaoCallback() {
     const code = url.searchParams.get("code");
     if (!code) return;
 
-    const usedCode = sessionStorage.getItem("usedKakaoCode");
-    if (usedCode === code) {
-      navigate("/login");
-      return;
-    }
     if (hasRequested.current) return;
     hasRequested.current = true;
 
-    sessionStorage.setItem("usedKakaoCode", code);
-
-    console.log("인가코드:", code);
-
-    const KakaoLogin = async () => {
+    const fetchToken = async () => {
       try {
         const BASE_API_URL = import.meta.env.VITE_BACKEND_API_URL;
-        const tokenRes = await axios.get(
-          `${BASE_API_URL}/api/oauth2/callback/kakao?code=${code}`
+
+        const response = await axios.post(
+          `${BASE_API_URL}/api/kakao/token`,
+          { authCode: code },
+          { withCredentials: true }
         );
 
-        console.log("토큰 응답 데이터:", tokenRes.data);
+        const { accessToken, refreshToken } = response.data;
 
-        const { accessToken, refreshToken } = tokenRes.data;
+        if (!accessToken || !refreshToken) {
+          throw new Error("토큰 누락");
+        }
+
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
         url.searchParams.delete("code");
         window.history.replaceState({}, document.title, url.toString());
+
+        const usedCode = sessionStorage.getItem("usedKakaoCode");
+        if (usedCode === code) {
+          navigate("/login");
+          return;
+        }
+
+        sessionStorage.setItem("usedKakaoCode", code);
 
         navigate("/mainpage");
       } catch (err) {
@@ -47,7 +52,7 @@ function KakaoCallback() {
       }
     };
 
-    KakaoLogin();
+    fetchToken();
   }, [navigate]);
 
   return <div>로그인 중입니다...</div>;
