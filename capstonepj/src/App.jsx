@@ -15,7 +15,6 @@ function App() {
       <Route path="/" element={<Mainpage />} />
       <Route path="/toppick" element={<TopPick />} />
       <Route path="/mypage" element={<Mypage />} />
-      <Route path="/oauth/kakao" element={<KakaoCallback />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

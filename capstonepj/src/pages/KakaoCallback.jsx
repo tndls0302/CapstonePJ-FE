@@ -9,30 +9,29 @@ function KakaoCallback() {
   useEffect(() => {
     const url = new URL(window.location.href);
     const code = url.searchParams.get("code");
+    console.log("인가 코드:", code);
+
     if (!code) return;
 
+    //중복 API 요청 방지
     if (hasRequested.current) return;
     hasRequested.current = true;
 
-    const fetchToken = async () => {
+    const getKakaoToken = async () => {
       try {
-        const BASE_API_URL = import.meta.env.VITE_BACKEND_API_URL;
-
         const response = await axios.post(
-          `${BASE_API_URL}/api/kakao/token`,
+          `/api/kakao/token`, //상대 경로 요청: 프록시 처리
           { authCode: code },
           { withCredentials: true }
         );
+        console.log("응답 데이터:", response.data);
 
+        //토큰 저장
         const { accessToken, refreshToken } = response.data;
-
-        if (!accessToken || !refreshToken) {
-          throw new Error("토큰 누락");
-        }
-
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
+        //인가코드 중복 처리
         url.searchParams.delete("code");
         window.history.replaceState({}, document.title, url.toString());
 
@@ -44,15 +43,16 @@ function KakaoCallback() {
 
         sessionStorage.setItem("usedKakaoCode", code);
 
-        navigate("/mainpage");
+        //리다이렉트
+        navigate("/");
       } catch (err) {
-        console.error(err.response?.data || err.message);
-        alert("로그인에 실패했습니다. 다시 시도해 주세요.");
+        console.error("토큰 발급 실패:", err);
+        alert("로그인에 실패");
         navigate("/login");
       }
     };
 
-    fetchToken();
+    getKakaoToken();
   }, [navigate]);
 
   return <div>로그인 중입니다...</div>;
