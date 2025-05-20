@@ -9,11 +9,12 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      /*
       "/api": {
         target: "https://mixmix2.store",
         changeOrigin: true,
         secure: false,
-      },
+      },*/
     },
     historyApiFallback: true,
   },

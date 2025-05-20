@@ -5,8 +5,6 @@ import kakaoLogo from "../assets/kakaologin.png";
 import GoogleLogo from "../assets/googlelogin.png";
 
 function Login() {
-  //const navigate = useNavigate();
-
   const handleKakaoLogin = () => {
     const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
     const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
@@ -16,6 +14,7 @@ function Login() {
     window.location.href = kakaoAuthUrl;
   };
 
+  // TODO: Google OAuth 연동
   const handleGoogleLogin = () => {
     alert("구글로그인");
   };

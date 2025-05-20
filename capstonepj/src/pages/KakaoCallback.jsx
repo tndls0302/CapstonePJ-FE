@@ -1,61 +1,100 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function KakaoCallback() {
   const navigate = useNavigate();
   const hasRequested = useRef(false);
+  const [status, setStatus] = useState("대기중...");
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    const code = url.searchParams.get("code");
-    console.log("인가 코드:", code);
+    const authCode = url.searchParams.get("code");
 
-    if (!code) return;
+    if (!authCode) {
+      alert("인가 코드가 없습니다. 다시 로그인해주세요.");
+      navigate("/");
+      return;
+    }
 
-    //중복 API 요청 방지
-    if (hasRequested.current) return;
+    if (hasRequested.current) {
+      console.warn("이미 요청을 보냈음");
+      return;
+    }
+
     hasRequested.current = true;
+    console.log("인가 코드:", authCode);
 
-    const getKakaoToken = async () => {
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
+
+    const getIdToken = async () => {
       try {
-        const response = await axios.post(
-          `/api/kakao/token`, //상대 경로 요청: 프록시 처리
-          { authCode: code },
-          { withCredentials: true }
-        );
-        console.log("응답 데이터:", response.data);
+        setStatus("서버에 로그인 요청 중...");
 
-        //토큰 저장
-        const { accessToken, refreshToken } = response.data;
+        // 1단계: 인가 코드로 idToken 받기
+        const CallbackResponse = await axios.get(
+          `${API_BASE_URL}/api/oauth2/callback/kakao?code=${authCode}`
+        );
+        console.log("카카오 콜백 응답:", CallbackResponse);
+        console.log("카카오 콜백 응답 data:", CallbackResponse.data);
+
+        const { idToken } = CallbackResponse.data;
+
+        // idToken 유효성 확인
+        if (!idToken) {
+          console.error("idToken이 존재하지 않습니다");
+          throw new Error("idToken 없음");
+        }
+        console.log("idToken 확인:", idToken);
+
+        // 2단계: idToken으로 자체 JWT 요청
+        const jwtResponse = await axios.post(
+          `${API_BASE_URL}/api/kakao/token`,
+          {
+            authCode: idToken,
+          }
+        );
+        const { accessToken, refreshToken } = jwtResponse.data;
+        console.log("accessToken:", accessToken);
+        console.log("refreshToken:", refreshToken);
+
+        if (!accessToken || !refreshToken) {
+          throw new Error("JWT 발급 실패");
+        }
+
+        // 토큰 저장
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
-        //인가코드 중복 처리
-        url.searchParams.delete("code");
-        window.history.replaceState({}, document.title, url.toString());
-
-        const usedCode = sessionStorage.getItem("usedKakaoCode");
-        if (usedCode === code) {
-          navigate("/login");
-          return;
-        }
-
-        sessionStorage.setItem("usedKakaoCode", code);
-
-        //리다이렉트
-        navigate("/");
+        //로그인 처리
+        setStatus("로그인 성공! 메인으로 이동합니다...");
+        navigate("/main");
       } catch (err) {
-        console.error("토큰 발급 실패:", err);
-        alert("로그인에 실패");
-        navigate("/login");
+        console.log("에러 전체:", err);
+        console.log("응답 전체:", err.response);
+        console.log("응답 status:", err.response?.status);
+        console.log("응답 data:", err.response?.data);
+        hasRequested.current = false;
+
+        alert("로그인 중 문제가 발생했습니다. 다시 시도해주세요.");
+        navigate("/");
       }
     };
 
-    getKakaoToken();
+    getIdToken();
+
+    return () => {
+      hasRequested.current = false;
+    };
   }, [navigate]);
 
-  return <div>로그인 중입니다...</div>;
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="text-center">
+        <p className="text-lg font-semibold">{status}</p>
+      </div>
+    </div>
+  );
 }
 
 export default KakaoCallback;

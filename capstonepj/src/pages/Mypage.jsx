@@ -20,7 +20,7 @@ function MyPage() {
 
   const closeModal = () => {
     setCurrentModal(null);
-    navigate("/", { replace: true });
+    navigate("/main", { replace: true });
   };
 
   const user = {

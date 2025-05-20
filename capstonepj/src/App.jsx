@@ -1,21 +1,21 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
-import NotFound from "./pages/NotFound";
+//import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Mainpage from "./pages/Mainpage";
-import TopPick from "./pages/TopPick";
+//import TopPick from "./pages/TopPick";
 import Mypage from "./pages/Mypage";
 import KakaoCallback from "./pages/KakaoCallback";
 
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Mainpage />} />
-      <Route path="/toppick" element={<TopPick />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/main" element={<Mainpage />} />
       <Route path="/mypage" element={<Mypage />} />
-      <Route path="*" element={<NotFound />} />
+      <Route path="/api/oauth2/callback/kakao" element={<KakaoCallback />} />
+      <Route path="*" element={<Navigate to="/" replace />} />{" "}
     </Routes>
   );
 }
