@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+//import axios from "axios";
 import { X, Star, MapPin, Utensils, Coins } from "lucide-react";
+import { getPlacesByBounds, searchPlaces } from "../api/places";
 
 function MainModal({ isOpen, onClose, userLat, userLng }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,15 +13,16 @@ function MainModal({ isOpen, onClose, userLat, userLng }) {
   useEffect(() => {
     if (!isOpen || !userLat || !userLng) return;
 
-    axios
-      .get("/api/places", {
-        params: {
-          latitude: userLat,
-          longitude: userLng,
-        },
-      })
-      .then((res) => {
-        setDefaultPlaces(res.data.placeList || []);
+    const bounds = {
+      minLat: userLat - 0.01,
+      maxLat: userLat + 0.01,
+      minLng: userLng - 0.01,
+      maxLng: userLng + 0.01,
+    };
+
+    getPlacesByBounds(bounds)
+      .then((places) => {
+        setDefaultPlaces(places);
       })
       .catch((err) => {
         console.error("기본 장소 불러오기 실패:", err);
@@ -38,12 +40,9 @@ function MainModal({ isOpen, onClose, userLat, userLng }) {
 
       setIsSearching(true);
 
-      axios
-        .get("/api/places/search", {
-          params: { keyword: searchTerm, page: 0, size: 10 },
-        })
-        .then((res) => {
-          setSearchResults(res.data.PlaceNames || []);
+      searchPlaces(searchTerm)
+        .then((results) => {
+          setSearchResults(results);
         })
         .catch((err) => {
           console.error("검색 실패:", err);

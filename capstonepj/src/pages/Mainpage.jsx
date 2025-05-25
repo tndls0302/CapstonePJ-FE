@@ -34,7 +34,7 @@ function Mainpage() {
 
   const closeModal = () => {
     setCurrentModal(null);
-    navigate("/", { replace: true });
+    navigate("/main", { replace: true });
   };
 
   const openModal = (modalType) => {
@@ -55,7 +55,7 @@ function Mainpage() {
   return (
     <div className="flex flex-col min-h-screen w-full font-['Pretendard'] bg-gradient-to-br from-sky-200 to-green-100 overflow-x-hidden">
       {/* 헤더 */}
-      <header className="w-full h-20 bg-white/80 backdrop-blur-sm shadow-md flex items-center justify-between px-6 sticky top-0 z-10">
+      <header className="w-full h-20 bg-white backdrop-blur-sm shadow-md flex items-center justify-between px-6 sticky top-0 z-10">
         <div className="flex items-center space-x-2">
           <h1 className="text-3xl font-bold text-deepBlue tracking-tight">
             <img src={logo} alt="로고" className="h-14 w-26" />
