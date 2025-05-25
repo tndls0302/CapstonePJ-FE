@@ -58,8 +58,8 @@ function BookmarkModal({ isOpen, onClose }) {
   const fetchBookmarks = async () => {
     try {
       setLoading(true);
-      const data = await getBookmarks();
-      setBookmarks(data);
+      const places = await getBookmarks();
+      setBookmarks(places);
     } catch (error) {
       console.error("찜 목록 가져오기 실패", error);
     } finally {
@@ -122,18 +122,18 @@ function BookmarkModal({ isOpen, onClose }) {
             ) : (
               bookmarks.map((store) => (
                 <div
-                  key={store.id}
+                  key={store.placeId}
                   className="mb-5 p-4 rounded-xl shadow-md border border-rose-200 bg-[#fff7f9] transition-transform hover:scale-[1.01]"
                 >
                   <div className="flex justify-center mb-3">
                     <img
-                      src={store.image}
-                      alt={store.name}
+                      src={store.photoUrls}
+                      alt={store.businessName}
                       className="w-32 h-32 object-cover rounded-lg shadow-sm"
                     />
                   </div>
                   <h3 className="text-md font-semibold text-center text-rose-600 mb-2">
-                    {store.name}
+                    {store.businessName}
                   </h3>
                   <div className="text-sm text-gray-800 space-y-1 px-2">
                     <p className="flex items-center gap-2">
@@ -146,13 +146,18 @@ function BookmarkModal({ isOpen, onClose }) {
                     </p>
                     <p className="flex items-center gap-2">
                       <Utensils className="w-4 h-4 text-pink-500" />
-                      {store.menu} · {store.price}
+                      메뉴1: {store.menu1} · {store.price1}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Utensils className="w-4 h-4 text-pink-500" />
+                      메뉴2: {store.menu2} · {store.price2}
                     </p>
                   </div>
                   <div className="flex justify-center mt-3">
                     <button
-                      onClick={() => handleToggle(store.id)}
+                      onClick={() => handleToggle(store.placeId)}
                       className="text-red-500 hover:scale-110 transition-transform"
+                      aria-label="찜 토글 버튼"
                     >
                       <Heart className="w-6 h-6" fill="currentColor" />
                     </button>
