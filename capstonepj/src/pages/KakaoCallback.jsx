@@ -54,7 +54,7 @@ function KakaoCallback() {
             authCode: idToken,
           }
         );
-        const { accessToken, refreshToken } = jwtResponse.data;
+        const { accessToken, refreshToken } = jwtResponse.data.data;
 
         console.log("accessToken:", accessToken);
         console.log("refreshToken:", refreshToken);
