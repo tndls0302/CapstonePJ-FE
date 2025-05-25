@@ -19,7 +19,6 @@ function KakaoCallback() {
 
     if (hasRequested.current) {
       console.warn("이미 요청을 보냈음");
-      console.log("⚠️ 중복 요청 방지로 차단");
       return;
     }
 
@@ -36,8 +35,8 @@ function KakaoCallback() {
         const CallbackResponse = await axios.get(
           `${API_BASE_URL}/api/oauth2/callback/kakao?code=${encodeURIComponent(authCode)}`
         );
-        console.log("카카오 콜백 응답:", CallbackResponse);
-        console.log("카카오 콜백 응답 data:", CallbackResponse.data);
+        //console.log("카카오 콜백 응답:", CallbackResponse);
+        //console.log("카카오 콜백 응답 data:", CallbackResponse.data);
 
         const { idToken } = CallbackResponse.data;
 
@@ -55,9 +54,8 @@ function KakaoCallback() {
           }
         );
         const { accessToken, refreshToken } = jwtResponse.data.data;
-
-        console.log("accessToken:", accessToken);
-        console.log("refreshToken:", refreshToken);
+        //console.log("accessToken:", accessToken);
+        //console.log("refreshToken:", refreshToken);
 
         if (!accessToken || !refreshToken) {
           throw new Error("JWT 발급 실패");

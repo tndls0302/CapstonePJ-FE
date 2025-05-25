@@ -11,8 +11,8 @@ import KakaoCallback from "./pages/KakaoCallback";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/main" element={<Mainpage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Mainpage />} />
       <Route path="/mypage" element={<Mypage />} />
       <Route path="/api/oauth2/callback/kakao" element={<KakaoCallback />} />
       <Route path="*" element={<Navigate to="/" replace />} />{" "}
