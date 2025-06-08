@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { X, Heart, Star, MapPin, Utensils } from "lucide-react";
+import { X, Heart, HeartBroken, Star, MapPin, Utensils } from "lucide-react";
 import { toggleBookmarks, getBookmarks } from "../api/bookmarks";
 
 function BookmarkModal({ isOpen, onClose }) {

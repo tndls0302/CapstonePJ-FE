@@ -22,7 +22,7 @@ export async function postReview(placeId, { rating, content }) {
   return response.data;
 }
 
-// 찜 기능능
+// 찜 기능
 export async function toggleFavorite(placeId) {
   const response = await axios.post(`${BASE_URL}/places/${placeId}/favorites`);
   return response.data; // 토글 후 현재 상태 반환

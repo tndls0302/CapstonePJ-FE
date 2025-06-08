@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import PlaceDetail from "../components/PlaceDetail";
-import ReviewSection from "../components/ReviewSection";
 
 export default function PlaceDetailPage() {
   const { id } = useParams();
