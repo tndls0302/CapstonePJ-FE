@@ -1,34 +1,56 @@
 import { useState, useEffect } from "react";
-import { Heart, HeartFill } from "lucide-react";
-import { getReviews, postReview } from "../api/review";
+import { Heart } from "lucide-react";
+import { getPlaceReviews, postReview, toggleFavorite } from "../api/review";
 
-export default function PlaceDetail({ placeId }) {
+export default function PlaceDetail({ place }) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const placeId = place?.id;
 
-  // 찜하기 토글 함수 (임시로 로컬 상태만)
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
+  const handleToggleFavorite = async () => {
+    try {
+      const data = await toggleFavorite(placeId);
+      // data가 토글 후 상태 반환한다고 가정 (true/false)
+      setIsFavorite(data.isFavorite);
+    } catch (error) {
+      console.error("찜 기능 토글 실패", error);
+      // 실패 시 토글 상태 변경 안 함 혹은 알림 처리 가능
+    }
   };
 
   return (
     <section className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">맛집 상세 정보</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        {place.name || "맛집 상세 정보"}
+      </h1>
 
-      {/* 예시: 이미지, 설명, 위치 등 */}
       <div className="mb-4 border p-4 rounded bg-white shadow-sm">
         <p>
           <strong>맛집 ID:</strong> {placeId}
         </p>
-        <p>여기에 맛집 이름, 설명, 주소, 이미지 등을 표시하세요.</p>
+        <p>
+          <strong>주소:</strong> {place.address || "주소 정보 없음"}
+        </p>
+        <p>
+          <strong>설명:</strong> {place.description || "설명 없음"}
+        </p>
+        <p>
+          <strong>평점:</strong> {place.rating || "0.0"}
+        </p>
       </div>
 
-      {/* 찜하기 토글 버튼 */}
       <button
-        onClick={toggleFavorite}
-        className="mb-6 flex items-center space-x-2 px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition"
+        onClick={handleToggleFavorite}
+        className={`mb-6 flex items-center space-x-2 px-4 py-2 rounded transition ${
+          isFavorite
+            ? "bg-pink-600 text-white"
+            : "bg-pink-500 text-white hover:bg-pink-600"
+        }`}
         aria-label={isFavorite ? "찜 취소" : "찜하기"}
       >
-        {isFavorite ? <HeartFill size={20} /> : <Heart size={20} />}
+        <Heart
+          size={20}
+          className={isFavorite ? "text-white fill-current" : "text-white"}
+        />
         <span>{isFavorite ? "찜 취소" : "찜하기"}</span>
       </button>
 
@@ -46,7 +68,7 @@ function ReviewSection({ placeId }) {
 
   const fetchReviews = async () => {
     try {
-      const data = await getReviews(placeId);
+      const data = await getPlaceReviews(placeId);
       setReviews(data);
       setError(null);
     } catch (err) {
@@ -56,7 +78,7 @@ function ReviewSection({ placeId }) {
   };
 
   useEffect(() => {
-    fetchReviews();
+    if (placeId) fetchReviews();
   }, [placeId]);
 
   const handleStarClick = (star) => {
@@ -72,7 +94,8 @@ function ReviewSection({ placeId }) {
 
     setLoading(true);
     try {
-      await postReview(placeId, { rating, comment });
+      // postReview에 content 키로 전달해야 API가 맞음
+      await postReview(placeId, { rating, content: comment });
       setRating(0);
       setComment("");
       fetchReviews();
@@ -85,7 +108,6 @@ function ReviewSection({ placeId }) {
     }
   };
 
-  // 날짜 포맷 함수 (간단히)
   const formatDate = (dateString) => {
     const d = new Date(dateString);
     return `${d.getFullYear()}-${(d.getMonth() + 1)
@@ -97,7 +119,6 @@ function ReviewSection({ placeId }) {
     <section className="max-w-3xl mx-auto p-4 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">리뷰 작성 및 목록</h2>
 
-      {/* 리뷰 작성 폼 */}
       <form
         onSubmit={handleSubmit}
         className="mb-8 border rounded-lg p-6 shadow-sm"
@@ -148,7 +169,6 @@ function ReviewSection({ placeId }) {
         )}
       </form>
 
-      {/* 리뷰 목록 */}
       <div>
         {reviews.length === 0 ? (
           <p className="text-gray-500 text-center">

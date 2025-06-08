@@ -1,23 +1,21 @@
 //import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import logo from "../assets/mmm.png";
 import kakaoLogo from "../assets/kakaologin.png";
 import GoogleLogo from "../assets/googlelogin.png";
 
 function Login() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const handleKakaoLogin = () => {
-    /*
     const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
     const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
 
     console.log(kakaoAuthUrl);
     window.location.href = kakaoAuthUrl;
-    */
 
-    navigate("/"); // 과제 제출용 임시 코드: 로그인 버튼 누르면 메인으로 이동
+    //navigate("/main"); // 과제 제출용 임시 코드: 로그인 버튼 누르면 메인으로 이동
   };
 
   // TODO: Google OAuth 연동

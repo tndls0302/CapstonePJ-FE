@@ -1,10 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
-//import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Mainpage from "./pages/Mainpage";
-//import TopPick from "./pages/TopPick";
 import Mypage from "./pages/Mypage";
 import KakaoCallback from "./pages/KakaoCallback";
 import PlaceDetailPage from "./pages/PlaceDetailPage";
@@ -12,8 +10,8 @@ import PlaceDetailPage from "./pages/PlaceDetailPage";
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Mainpage />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/main" element={<Mainpage />} />
       <Route path="/mypage" element={<Mypage />} />
       <Route path="/api/oauth2/callback/kakao" element={<KakaoCallback />} />
       <Route path="/place/:id" element={<PlaceDetailPage />} />

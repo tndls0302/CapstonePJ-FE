@@ -31,7 +31,7 @@ function Sidebar({ openModal }) {
         {/* 맛집 추천 */}
         <button
           className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold"
-          onClick={() => navigate("/", { state: { showRecommend: true } })}
+          onClick={() => navigate("/main", { state: { showRecommend: true } })}
           aria-label="맛집 추천 섹션 이동"
         >
           <Star size={20} />

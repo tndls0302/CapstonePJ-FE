@@ -42,7 +42,7 @@ function Mainpage() {
       closeModal();
     } else {
       setCurrentModal(modalType);
-      navigate(`/?modal=${modalType}`, { replace: true });
+      navigate(`/main?modal=${modalType}`, { replace: true });
     }
   };
 
