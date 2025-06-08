@@ -7,6 +7,7 @@ import Mainpage from "./pages/Mainpage";
 //import TopPick from "./pages/TopPick";
 import Mypage from "./pages/Mypage";
 import KakaoCallback from "./pages/KakaoCallback";
+import PlaceDetailPage from "./pages/PlaceDetailPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/" element={<Mainpage />} />
       <Route path="/mypage" element={<Mypage />} />
       <Route path="/api/oauth2/callback/kakao" element={<KakaoCallback />} />
+      <Route path="/place/:id" element={<PlaceDetailPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />{" "}
     </Routes>
   );
