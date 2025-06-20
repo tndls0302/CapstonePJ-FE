@@ -6,13 +6,21 @@ const BASE = "/api/places";
 export const getPlacesByBounds = async ({ minLat, maxLat, minLng, maxLng }) => {
   const response = await axiosInstance.get(BASE, {
     params: {
-      minLatitude: minLat,
-      maxLatitude: maxLat,
-      minLongitude: minLng,
-      maxLongitude: maxLng,
+      minLatitude: Number(minLat),
+      maxLatitude: Number(maxLat),
+      minLongitude: Number(minLng),
+      maxLongitude: Number(maxLng),
     },
   });
   return response.data;
+};
+
+// 장소 상세 정보 조회 (ID 기반)
+export const getPlaceDetailById = async (placeId) => {
+  const response = await axiosInstance.get(`${BASE}/place-id`, {
+    params: { placeId },
+  });
+  return response.data.data;
 };
 
 // 키워드로 장소 검색
@@ -20,12 +28,6 @@ export const searchPlaces = async (keyword) => {
   const response = await axiosInstance.get(`${BASE}/search`, {
     params: { keyword },
   });
-  return response.data;
-};
-
-// 장소 상세 정보 조회 (ID 기반)
-export const getPlaceDetailById = async (placeId) => {
-  const response = await axiosInstance.get(`${BASE}/${placeId}`);
   return response.data;
 };
 

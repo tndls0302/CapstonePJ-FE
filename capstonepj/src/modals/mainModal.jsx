@@ -1,137 +1,203 @@
-import React, { useState, useEffect } from "react";
-//import axios from "axios";
-import { X, Star, MapPin, Utensils, Coins } from "lucide-react";
-import { getPlacesByBounds, searchPlaces } from "../api/places";
+import React, { useEffect, useState } from "react";
+import {
+  getPlacesByBounds,
+  getPlaceDetailById,
+  searchPlaces,
+} from "../api/places";
+import { Utensils, Tag, MapPin, Phone, UtensilsCrossed } from "lucide-react";
 
-function MainModal({ isOpen, onClose, userLat, userLng }) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [defaultPlaces, setDefaultPlaces] = useState([]);
+function MainModal({ userLocation, isOpen, onClose }) {
+  const [places, setPlaces] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [placeDetail, setPlaceDetail] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // 1. 근처 맛집 리스트 불러오기
   useEffect(() => {
-    if (!isOpen || !userLat || !userLng) return;
+    if (!userLocation) return;
 
+    const OFFSET = 0.02;
     const bounds = {
-      minLat: userLat - 0.01,
-      maxLat: userLat + 0.01,
-      minLng: userLng - 0.01,
-      maxLng: userLng + 0.01,
+      minLat: userLocation.lat - OFFSET,
+      maxLat: userLocation.lat + OFFSET,
+      minLng: userLocation.lng - OFFSET,
+      maxLng: userLocation.lng + OFFSET,
     };
 
-    getPlacesByBounds(bounds)
-      .then((places) => {
-        setDefaultPlaces(places);
-      })
-      .catch((err) => {
-        console.error("기본 장소 불러오기 실패:", err);
-      });
-  }, [isOpen, userLat, userLng]);
-
-  // 2. 검색어 입력 시 검색 API 호출
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (searchTerm.trim() === "") {
-        setSearchResults([]);
-        setIsSearching(false);
-        return;
+    async function fetchNearbyPlaces() {
+      setLoading(true);
+      try {
+        const res = await getPlacesByBounds(bounds);
+        setPlaces(res.data.placeCsvData || []);
+      } catch (err) {
+        console.error("근처 맛집 불러오기 실패", err);
+      } finally {
+        setLoading(false);
       }
+    }
 
-      setIsSearching(true);
+    fetchNearbyPlaces();
+  }, [userLocation]);
 
-      searchPlaces(searchTerm)
-        .then((results) => {
-          setSearchResults(results);
-        })
-        .catch((err) => {
-          console.error("검색 실패:", err);
-          setSearchResults([]);
-        });
-    }, 400);
+  const handleSearch = async () => {
+    const trimmedKeyword = searchKeyword.trim();
+    if (!trimmedKeyword) {
+      alert("검색어를 입력하세요.");
+      return;
+    }
+    try {
+      const data = await searchPlaces(trimmedKeyword);
+      setSearchResults(data.PlaceNames || []);
+    } catch (error) {
+      console.error("검색 실패", error);
+      alert("검색 중 오류가 발생했습니다.");
+    }
+  };
 
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm]);
+  const handlePlaceClick = async (placeId) => {
+    try {
+      const detail = await getPlaceDetailById(placeId);
+      setPlaceDetail(detail);
+    } catch (err) {
+      console.error("상세 정보 요청 실패", err);
+    }
+  };
 
-  const displayList = isSearching ? searchResults : defaultPlaces;
+  const handleClose = () => {
+    setSearchKeyword("");
+    setSearchResults([]);
+    setPlaceDetail(null);
+    onClose();
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-[380px] max-w-[100vw] z-50 transition-transform duration-300 ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
+      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      onClick={handleClose}
     >
-      <div className="h-full bg-white/90 backdrop-blur-lg shadow-2xl border-r-2 border-dashed border-vintagePink p-5 overflow-y-auto scrollbar-hide rounded-r-2xl">
-        {/* 닫기 버튼 */}
-        <div className="flex justify-end mb-4">
+      <div
+        className="bg-white rounded-lg shadow-lg w-[90vw] max-w-xl max-h-[80vh] overflow-auto p-4 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex mb-4">
+          <input
+            type="text"
+            placeholder="가게 이름 또는 메뉴 검색"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
+            className="flex-grow border border-gray-300 rounded-l px-3 py-2 focus:outline-none"
+          />
           <button
-            onClick={onClose}
-            className="text-zinc-500 hover:text-black transition"
-            aria-label="모달 닫기"
+            onClick={handleSearch}
+            className="bg-vintagePink text-white px-4 rounded-r hover:bg-pink-600"
           >
-            <X className="w-6 h-6" />
+            검색
           </button>
         </div>
 
-        {/* 제목 */}
-        <h2 className="text-lg font-bold text-vintagePink mb-3 flex items-center gap-2">
-          <Coins className="w-5 h-5 text-vintagePink" />
-          근처 만원 미만 맛집
-        </h2>
+        {loading && <p className="text-center text-gray-500">로딩 중...</p>}
 
-        {/* 검색창 */}
-        <input
-          type="text"
-          placeholder="검색"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 rounded-md border border-gray-300 focus:border-vintagePink focus:ring-vintagePink focus:ring-1 focus:outline-none"
-        />
+        {placeDetail ? (
+          <div className="absolute bottom-[200px] left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-300 rounded-xl shadow-xl p-4 w-[320px]">
+            {placeDetail.photoUrls?.split(",")[0] && (
+              <img
+                src={placeDetail.photoUrls.split(",")[0]}
+                alt="가게 사진"
+                className="w-full h-40 object-cover rounded-md mb-3"
+              />
+            )}
 
-        {/* 리스트 */}
-        {displayList.length === 0 ? (
-          <p className="text-center text-gray-500 mt-10">
-            {isSearching
-              ? "검색 결과가 없습니다."
-              : "근처 맛집 정보를 불러오는 중..."}
-          </p>
-        ) : (
-          displayList.map((place, index) => (
-            <div
-              key={place.placeId || index}
-              className="mb-5 p-4 rounded-xl shadow-md border border-pink-200 bg-[#fff7f9] transition-transform hover:scale-[1.01]"
-            >
-              <div className="flex justify-center mb-3">
-                <img
-                  src={
-                    isSearching
-                      ? "/search-result.jpg"
-                      : place.imageUrl || "/default.jpg"
-                  }
-                  alt={isSearching ? place.businessName : place.name}
-                  className="w-32 h-32 object-cover rounded-lg shadow-sm"
-                />
-              </div>
-              <h3 className="text-md font-semibold text-center text-vintagePink mb-2">
-                {isSearching ? place.businessName : place.name}
-              </h3>
-              <div className="text-sm text-gray-800 space-y-1 px-2">
-                <p className="flex items-center gap-2">
-                  <Star className="w-4 h-4 text-yellow-500" />
-                  평점: {place.rating || "4.8"}
-                </p>
-                <p className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-rose-500" />
-                  위치: {place.address || "주소 정보 없음"}
-                </p>
-                <p className="flex items-center gap-2">
-                  <Utensils className="w-4 h-4 text-pink-500" />
-                  {place.menu || "대표 메뉴 없음"} ·{" "}
-                  {place.price || "₩정보 없음"}
-                </p>
-              </div>
+            <h3 className="text-xl font-extrabold text-deepBlue mb-2 truncate">
+              {placeDetail.businessName || "가게 이름 없음"}
+            </h3>
+
+            <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
+              <MapPin className="w-4 h-4 mr-1 text-vintagePink" />
+              <span>{placeDetail.address}</span>
             </div>
-          ))
+
+            <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
+              <Utensils className="w-4 h-4 mr-1 text-vintagePink" />
+              <span>
+                {placeDetail.menu1 || "-"}
+                {placeDetail.menu2 ? `, ${placeDetail.menu2}` : ""}
+              </span>
+            </div>
+
+            <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
+              <Tag className="w-4 h-4 mr-1 text-vintagePink" />
+              <span>
+                {placeDetail.price1
+                  ? `${Number(placeDetail.price1).toLocaleString()} ₩`
+                  : "가격 정보 없음"}
+              </span>
+            </div>
+
+            {placeDetail.contactNumber && (
+              <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
+                <Phone className="w-4 h-4 mr-1 text-vintagePink" />
+                <span>{placeDetail.contactNumber}</span>
+              </div>
+            )}
+
+            <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
+              <UtensilsCrossed className="w-4 h-4 mr-1 text-vintagePink" />
+              <span>{placeDetail.category}</span>
+            </div>
+          </div>
+        ) : (
+          <>
+            {searchResults.length > 0 ? (
+              <div>
+                <h4 className="font-semibold mb-2">검색 결과</h4>
+                <ul className="divide-y divide-gray-200 max-h-64 overflow-auto">
+                  {searchResults.map((place) => (
+                    <li
+                      key={place.placeId}
+                      onClick={() => handlePlaceClick(place.placeId)}
+                      className="cursor-pointer py-2 hover:bg-gray-100"
+                    >
+                      {place.businessName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <>
+                <h4 className="font-semibold mb-2">내 위치 근처 맛집</h4>
+                {places.length === 0 ? (
+                  <p>조건에 맞는 음식점이 없습니다.</p>
+                ) : (
+                  <ul className="divide-y divide-gray-200 max-h-64 overflow-auto">
+                    {places.map((place) => (
+                      <li
+                        key={place.placeId}
+                        onClick={() => handlePlaceClick(place.placeId)}
+                        className="cursor-pointer py-2 hover:bg-gray-100"
+                      >
+                        <div className="font-semibold text-vintagePink">
+                          {place.businessName}
+                        </div>
+                        <div className="flex items-center text-gray-600 text-sm">
+                          <Utensils className="w-4 h-4 mr-1 text-vintagePink" />
+                          <span>{place.menu1}</span>
+                          <Tag className="w-4 h-4 ml-4 mr-1 text-vintagePink" />
+                          <span>
+                            ₩ {Number(place.price1)?.toLocaleString() || "-"}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
     </div>
