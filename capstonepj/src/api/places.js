@@ -26,7 +26,7 @@ export const getPlaceDetailById = async (placeId) => {
 // 키워드로 장소 검색
 export const searchPlaces = async (keyword) => {
   const response = await axiosInstance.get(`${BASE}/search`, {
-    params: { keyword },
+    params: { keyword: encodeURIComponent(keyword) },
   });
   return response.data;
 };

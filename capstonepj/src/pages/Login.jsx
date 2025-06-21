@@ -18,7 +18,6 @@ function Login() {
     //navigate("/main"); // 과제 제출용 임시 코드: 로그인 버튼 누르면 메인으로 이동
   };
 
-  // TODO: Google OAuth 연동
   const handleGoogleLogin = () => {
     alert("구글로그인");
   };

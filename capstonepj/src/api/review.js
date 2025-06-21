@@ -1,29 +1,38 @@
-import axios from "axios";
-const BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
+import axiosInstance from "./axiosInstance";
 
-// 장소 상세 조회
-export async function getPlaceDetail(placeId) {
-  const response = await axios.get(`${BASE_URL}/places/${placeId}`);
-  return response.data;
-}
+const BASE = "/api/reviews";
 
-// 장소 리뷰 조회
-export async function getPlaceReviews(placeId) {
-  const response = await axios.get(`${BASE_URL}/places/${placeId}/reviews`);
-  return response.data;
-}
+// 리뷰 등록
+export const postReview = async (dtoObject, imageFiles) => {
+  const formData = new FormData();
 
-// 리뷰 작성
-export async function postReview(placeId, { rating, content }) {
-  const response = await axios.post(`${BASE_URL}/places/${placeId}/reviews`, {
-    rating,
-    content,
+  // 1. reviewSaveReqDto 필드에 JSON 문자열로 추가
+  formData.append(
+    "reviewSaveReqDto",
+    new Blob([JSON.stringify(dtoObject)], { type: "application/json" })
+  );
+
+  // 2. 이미지 파일들을 반복문으로 추가
+  imageFiles.forEach((file) => {
+    formData.append("reviewImage", file);
   });
-  return response.data;
-}
 
-// 찜 기능
-export async function toggleFavorite(placeId) {
-  const response = await axios.post(`${BASE_URL}/places/${placeId}/favorites`);
-  return response.data; // 토글 후 현재 상태 반환
-}
+  const response = await axiosInstance.post(`${BASE}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
+
+// 특정 장소 리뷰 조회
+export const getReviewsByPlaceId = async (placeId) => {
+  const response = await axiosInstance.get(`${BASE}/all/${placeId}`);
+  const { reviewListResDto, pageInfoResDto } = response.data;
+
+  return {
+    reviews: reviewListResDto,
+    pageInfo: pageInfoResDto,
+  };
+};

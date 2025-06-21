@@ -3,6 +3,8 @@ import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import useUserLocation from "../hooks/userLocation";
 import { getPlacesByBounds, getPlaceDetailById } from "../api/places";
 import { Utensils, Tag, MapPin, Phone, UtensilsCrossed } from "lucide-react";
+import ReviewViewModal from "../modals/reviewViewModal";
+import ReviewWriteModal from "../modals/reviewWriteModal";
 
 function MainMap() {
   const userLocation = useUserLocation(); // 사용자 위치
@@ -12,6 +14,8 @@ function MainMap() {
   const [bounds, setBounds] = useState(null); // 지도 범위 저장
   const [placeDetail, setPlaceDetail] = useState(null); // 상세 정보
   const detailRef = useRef(null);
+  const [showReviewViewModal, setShowReviewViewModal] = useState(false);
+  const [showReviewWriteModal, setShowReviewWriteModal] = useState(false);
 
   useEffect(() => {
     if (userLocation) {
@@ -41,7 +45,6 @@ function MainMap() {
     if (!bounds) return;
 
     const { minLat, maxLat, minLng, maxLng } = bounds;
-    console.log("요청 보낼 bounds 확인:", bounds); //🔧디버깅용
 
     if (
       minLat == null ||
@@ -60,7 +63,6 @@ function MainMap() {
     setLoading(true);
     try {
       const data = await getPlacesByBounds(bounds);
-      console.log("불러온 장소 리스트:", data); //🔧디버깅용
 
       setPlaces(data.data.placeCsvData || []);
     } catch (error) {
@@ -83,9 +85,7 @@ function MainMap() {
   // 마커 클릭 시 장소 상세 정보 불러오기
   const handleMarkerClick = async (placeId) => {
     try {
-      console.log("요청 보낼 placeId:", placeId); //🔧디버깅용
       const detail = await getPlaceDetailById(placeId);
-      console.log("상세 정보 확인:", detail); //🔧디버깅용
       setPlaceDetail(detail);
     } catch (err) {
       console.error("장소 상세 정보 불러오기 실패:", err);
@@ -111,8 +111,6 @@ function MainMap() {
   if (!userLocation || !mapCenter) {
     return <div>지도를 불러오는 중...</div>;
   }
-
-  console.log("현재 불러온 places 배열:", places); //🔧디버깅용
 
   return (
     <div className="relative w-full h-screen">
@@ -178,24 +176,28 @@ function MainMap() {
         </div>
       )}
 
-      {/* 재검색 버튼 */}
-      {userLocation &&
-        mapCenter &&
-        (userLocation.lat !== mapCenter.lat ||
-          userLocation.lng !== mapCenter.lng) && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
-            <button
-              onClick={fetchPlaces}
-              className="w-60 border-2 border-vintagePink text-gray-600 bg-white px-7 py-2 rounded-full shadow-lg font-semibold hover:bg-vintagePink hover:text-white"
-            >
-              여기서 재검색
-            </button>
-          </div>
-        )}
-
       {/* 장소 상세 정보 카드 */}
       {placeDetail && (
-        <div className="absolute bottom-[200px] left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-300 rounded-xl shadow-xl p-4 w-[320px]">
+        <div
+          className="
+      absolute
+      top-20
+      right-6
+      z-50
+      bg-white
+      border border-gray-300
+      rounded-xl
+      shadow-xl
+      p-6
+      w-[340px]
+      max-h-[80vh]
+      overflow-y-auto
+      flex
+      flex-col
+      justify-between
+    "
+        >
+          {" "}
           {/* 이미지 */}
           {placeDetail.photoUrls && placeDetail.photoUrls.split(",")[0] && (
             <img
@@ -204,18 +206,15 @@ function MainMap() {
               className="w-full h-40 object-cover rounded-md mb-3"
             />
           )}
-
           {/* 가게 이름 */}
           <h3 className="text-xl font-extrabold text-deepBlue mb-2 truncate">
             {placeDetail.businessName || "가게 이름 없음"}
           </h3>
-
           {/* 주소 */}
           <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
             <MapPin className="w-4 h-4 mr-1 text-vintagePink" />
             <span className="truncate">{placeDetail.address}</span>
           </div>
-
           {/* 메뉴 */}
           <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
             <Utensils className="w-4 h-4 mr-1 text-vintagePink" />
@@ -224,7 +223,6 @@ function MainMap() {
               {placeDetail.menu2 ? `, ${placeDetail.menu2}` : ""}
             </span>
           </div>
-
           {/* 가격 */}
           <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
             <Tag className="w-4 h-4 mr-1 text-vintagePink" />
@@ -234,7 +232,6 @@ function MainMap() {
                 : "가격 정보 없음"}
             </span>
           </div>
-
           {/* 전화번호 */}
           {placeDetail.contactNumber && (
             <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
@@ -242,12 +239,40 @@ function MainMap() {
               <span>{placeDetail.contactNumber}</span>
             </div>
           )}
-
           {/* 카테고리 */}
           <div className="flex items-center text-sm text-gray-600 mb-1 space-x-1">
             <UtensilsCrossed className="w-4 h-4 mr-1 text-vintagePink" />
             <span>{placeDetail.category}</span>
           </div>
+          {/* 리뷰 보기 */}
+          <div className="flex space-x-4 mt-4">
+            <button
+              onClick={() => setShowReviewViewModal(true)}
+              className="px-4 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition"
+              type="button"
+            >
+              리뷰 보기
+            </button>
+            <button
+              onClick={() => setShowReviewWriteModal(true)}
+              className="px-4 py-2 bg-white border border-pink-500 text-pink-500 rounded-lg shadow hover:bg-pink-50 transition"
+              type="button"
+            >
+              리뷰 작성
+            </button>
+          </div>
+          {showReviewViewModal && (
+            <ReviewViewModal
+              placeId={placeDetail.placeId}
+              onClose={() => setShowReviewViewModal(false)}
+            />
+          )}
+          {showReviewWriteModal && (
+            <ReviewWriteModal
+              placeId={placeDetail.placeId}
+              onClose={() => setShowReviewWriteModal(false)}
+            />
+          )}
         </div>
       )}
     </div>

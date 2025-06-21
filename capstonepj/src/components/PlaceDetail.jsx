@@ -1,21 +1,13 @@
+/*
 import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
-import { getPlaceReviews, postReview, toggleFavorite } from "../api/review";
+import {
+  getReviewsByPlaceId as getPlaceReviews,
+  postReview,
+} from "../api/review";
 
 export default function PlaceDetail({ place }) {
-  const [isFavorite, setIsFavorite] = useState(false);
   const placeId = place?.id;
-
-  const handleToggleFavorite = async () => {
-    try {
-      const data = await toggleFavorite(placeId);
-      // data가 토글 후 상태 반환한다고 가정 (true/false)
-      setIsFavorite(data.isFavorite);
-    } catch (error) {
-      console.error("찜 기능 토글 실패", error);
-      // 실패 시 토글 상태 변경 안 함 혹은 알림 처리 가능
-    }
-  };
 
   return (
     <section className="max-w-xl mx-auto p-4">
@@ -37,22 +29,6 @@ export default function PlaceDetail({ place }) {
           <strong>평점:</strong> {place.rating || "0.0"}
         </p>
       </div>
-
-      <button
-        onClick={handleToggleFavorite}
-        className={`mb-6 flex items-center space-x-2 px-4 py-2 rounded transition ${
-          isFavorite
-            ? "bg-pink-600 text-white"
-            : "bg-pink-500 text-white hover:bg-pink-600"
-        }`}
-        aria-label={isFavorite ? "찜 취소" : "찜하기"}
-      >
-        <Heart
-          size={20}
-          className={isFavorite ? "text-white fill-current" : "text-white"}
-        />
-        <span>{isFavorite ? "찜 취소" : "찜하기"}</span>
-      </button>
 
       <ReviewSection placeId={placeId} />
     </section>
@@ -92,14 +68,18 @@ function ReviewSection({ placeId }) {
       return;
     }
 
+    const dto = {
+      placeId,
+      rating,
+      content: comment,
+    };
+
     setLoading(true);
     try {
-      // postReview에 content 키로 전달해야 API가 맞음
-      await postReview(placeId, { rating, content: comment });
+      await postReview(dto, []); // 이미지 없는 기본 제출
       setRating(0);
       setComment("");
       fetchReviews();
-      setError(null);
     } catch (err) {
       console.error(err);
       setError("리뷰 작성에 실패했습니다.");
@@ -176,24 +156,36 @@ function ReviewSection({ placeId }) {
           </p>
         ) : (
           <ul className="space-y-6">
-            {reviews.map(({ id, rating, comment, createdAt, userName }) => (
-              <li key={id} className="border rounded-lg p-4 bg-white shadow-sm">
-                <div className="flex justify-between items-center mb-2">
-                  <p className="font-semibold">{userName || "익명"}</p>
-                  <p className="text-yellow-400 font-bold">
-                    {"★".repeat(rating)}
-                    {"☆".repeat(5 - rating)}
+            {reviews.map(
+              ({
+                reviewId,
+                rating,
+                content,
+                createdAt,
+                memberName,
+                memberImage,
+              }) => (
+                <li
+                  key={reviewId}
+                  className="border rounded-lg p-4 bg-white shadow-sm"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="font-semibold">{memberName || "익명"}</p>
+                    <p className="text-yellow-400 font-bold">
+                      {"★".repeat(rating)}
+                      {"☆".repeat(5 - rating)}
+                    </p>
+                  </div>
+                  <p className="mb-2 whitespace-pre-line">{content}</p>
+                  <p className="text-xs text-gray-400 text-right">
+                    {formatDate(createdAt)}
                   </p>
-                </div>
-                <p className="mb-2 whitespace-pre-line">{comment}</p>
-                <p className="text-xs text-gray-400 text-right">
-                  {formatDate(createdAt)}
-                </p>
-              </li>
-            ))}
+                </li>
+              )
+            )}
           </ul>
         )}
       </div>
     </section>
   );
-}
+}*/

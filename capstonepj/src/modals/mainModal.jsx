@@ -40,6 +40,7 @@ function MainModal({ userLocation, isOpen, onClose }) {
   }, [userLocation]);
 
   const handleSearch = async () => {
+    console.log("검색 시작"); //🔧디버깅용
     const trimmedKeyword = searchKeyword.trim();
     if (!trimmedKeyword) {
       alert("검색어를 입력하세요.");
@@ -47,7 +48,17 @@ function MainModal({ userLocation, isOpen, onClose }) {
     }
     try {
       const data = await searchPlaces(trimmedKeyword);
-      setSearchResults(data.PlaceNames || []);
+      console.log("검색 결과:", data); //🔧디버깅용
+      const results = data.PlaceNames || [];
+      setSearchResults(results);
+
+      if (results.length > 0) {
+        const firstPlaceId = results[0].placeId;
+        const detail = await getPlaceDetailById(firstPlaceId);
+        setPlaceDetail(detail);
+      } else {
+        setPlaceDetail(null);
+      }
     } catch (error) {
       console.error("검색 실패", error);
       alert("검색 중 오류가 발생했습니다.");
