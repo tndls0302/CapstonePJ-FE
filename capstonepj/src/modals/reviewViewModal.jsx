@@ -3,14 +3,18 @@ import { getReviewsByPlaceId } from "../api/review";
 
 function ReviewViewModal({ placeId, onClose }) {
   const [reviews, setReviews] = useState([]);
+  const BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
 
   useEffect(() => {
     async function fetchReviews() {
+      console.log("받은 placeId:", placeId); //디버깅용
       try {
-        const res = await getReviewsByPlaceId(placeId);
-        setReviews(res);
+        const { reviews } = await getReviewsByPlaceId(placeId);
+        console.log("받은 리뷰 데이터:", reviews); //디버깅용
+        setReviews(reviews);
       } catch (err) {
         console.error("리뷰 불러오기 실패", err);
+        alert("리뷰를 불러오는 중 문제가 발생했어요 😢");
       }
     }
     fetchReviews();
@@ -42,8 +46,13 @@ function ReviewViewModal({ placeId, onClose }) {
               >
                 <div className="flex items-center mb-2 space-x-4">
                   <img
-                    src={review.memberImage || "/default-profile.png"}
-                    alt={review.memberName}
+                    src={
+                      review.memberImage &&
+                      review.memberImage.startsWith("http")
+                        ? review.memberImage
+                        : `${BASE_URL}${review.memberImage}`
+                    }
+                    alt={review.memberName || "익명"}
                     className="w-12 h-12 rounded-full object-cover border border-gray-300"
                   />
                   <div>

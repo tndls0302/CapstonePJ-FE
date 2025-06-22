@@ -13,10 +13,11 @@ export const postReview = async (dtoObject, imageFiles) => {
   );
 
   // 2. 이미지 파일들을 반복문으로 추가
-  imageFiles.forEach((file) => {
-    formData.append("reviewImage", file);
-  });
-
+  if (Array.isArray(imageFiles)) {
+    imageFiles.forEach((file) => {
+      formData.append("reviewImage", file);
+    });
+  }
   const response = await axiosInstance.post(`${BASE}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -29,7 +30,18 @@ export const postReview = async (dtoObject, imageFiles) => {
 // 특정 장소 리뷰 조회
 export const getReviewsByPlaceId = async (placeId) => {
   const response = await axiosInstance.get(`${BASE}/all/${placeId}`);
-  const { reviewListResDto, pageInfoResDto } = response.data;
+  const { reviewListResDto, pageInfoResDto } = response.data.data;
+
+  return {
+    reviews: reviewListResDto,
+    pageInfo: pageInfoResDto,
+  };
+};
+
+// 내 리뷰 리스트 조회 - 마이페이지
+export const getMyReviews = async () => {
+  const response = await axiosInstance.get(`${BASE}/my-reviews`);
+  const { reviewListResDto, pageInfoResDto } = response.data.data;
 
   return {
     reviews: reviewListResDto,

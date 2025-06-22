@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Plane, Star, Heart, User, Settings } from "lucide-react"; // 아이콘 불러오기
 
-function Sidebar({ openModal }) {
+function Sidebar() {
   const navigate = useNavigate();
 
   return (
@@ -11,8 +11,8 @@ function Sidebar({ openModal }) {
         {/* 홈 */}
         <button
           className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold"
-          onClick={() => openModal("main")}
-          aria-label="맛집 탐방 모달 열기"
+          onClick={() => navigate("/main")}
+          aria-label="홈"
         >
           <Plane size={20} />
           <span>맛집 탐방</span>
@@ -21,8 +21,8 @@ function Sidebar({ openModal }) {
         {/* 찜 */}
         <button
           className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold"
-          onClick={() => openModal("bookmark")}
-          aria-label="찜 모달 열기"
+          onClick={() => navigate("/main")}
+          aria-label="홈->찜하기"
         >
           <Heart size={20} />
           <span>찜</span>
@@ -32,7 +32,7 @@ function Sidebar({ openModal }) {
         <button
           className="flex flex-col items-center gap-1 hover:text-vintagePink hover:scale-110 transition-transform font-semibold"
           onClick={() => navigate("/main", { state: { showRecommend: true } })}
-          aria-label="맛집 추천 섹션 이동"
+          aria-label="홈->맛집 추천 섹션 이동"
         >
           <Star size={20} />
           <span>맛집 추천</span>

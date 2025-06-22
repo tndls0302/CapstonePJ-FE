@@ -15,21 +15,16 @@ function ReviewWriteModal({ placeId, onClose }) {
       alert("리뷰 내용을 입력해주세요.");
       return;
     }
+
     const dto = { placeId, content, rating };
-    const formData = new FormData();
-    formData.append(
-      "reviewSaveReqDto",
-      new Blob([JSON.stringify(dto)], { type: "application/json" })
-    );
-    images.forEach((img) => formData.append("reviewImage", img));
 
     try {
-      await postReview(formData);
+      await postReview(dto, images);
       alert("리뷰가 등록되었습니다!");
       onClose();
     } catch (err) {
       console.error("리뷰 등록 실패", err);
-      alert("리뷰 등록 중 오류가 발생했습니다.");
+      alert("리뷰 등록 중 문제가 발생했어요 😢");
     }
   };
 
