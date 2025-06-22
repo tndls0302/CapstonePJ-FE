@@ -23,7 +23,6 @@ function KakaoCallback() {
     }
 
     hasRequested.current = true;
-    console.log("인가 코드:", authCode);
 
     const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
 

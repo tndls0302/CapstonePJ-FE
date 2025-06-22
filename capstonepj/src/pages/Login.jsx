@@ -18,9 +18,10 @@ function Login() {
     //navigate("/main"); // 과제 제출용 임시 코드: 로그인 버튼 누르면 메인으로 이동
   };
 
+  /*
   const handleGoogleLogin = () => {
     alert("구글로그인");
-  };
+  };*/
 
   return (
     <div className="flex h-screen bg-white">
@@ -45,14 +46,14 @@ function Login() {
             로그인
           </button>
 
-          {/* 구글 로그인 */}
+          {/* 구글 로그인 
           <button
             onClick={handleGoogleLogin}
             className="w-full py-3 bg-white text-[#3C1E1E] font-semibold border rounded-lg mb-4 hover:brightness-90 transition flex items-center justify-center gap-2"
           >
             <img src={GoogleLogo} alt="구글 로고" className="w-6 h-6" /> 구글
             로그인
-          </button>
+          </button>*/}
 
           <p className="text-xs text-gray-400 mt-6 text-center">
             로그인 시 <span className="underline">이용약관</span> 및{" "}
