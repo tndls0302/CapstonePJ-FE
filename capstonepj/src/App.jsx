@@ -5,7 +5,6 @@ import Login from "./pages/Login";
 import Mainpage from "./pages/Mainpage";
 import Mypage from "./pages/Mypage";
 import KakaoCallback from "./pages/KakaoCallback";
-//import PlaceDetailPage from "./pages/PlaceDetailPage";
 
 function App() {
   return (
@@ -18,6 +17,5 @@ function App() {
     </Routes>
   );
 }
-//      <Route path="/place/:id" element={<PlaceDetail />} />
 
 export default App;
